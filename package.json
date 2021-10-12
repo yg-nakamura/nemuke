@@ -39,5 +39,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/three": "^0.133.0",
+    "react-three-fiber": "^6.0.13",
+    "three": "^0.133.1"
   }
 }
