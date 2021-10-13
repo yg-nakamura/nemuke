@@ -18,17 +18,23 @@ function init(MainCanvas: HTMLCanvasElement) {
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(45, width / height);
-    camera.position.set(0, 0, 1000);
+    camera.position.set(0, 0, 5);
 
-    const geometry = new THREE.BoxGeometry(400, 400, 400);
-    
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+
     const loader = new THREE.TextureLoader()
-    const side = getMaterial("stone.png",loader);
-    const top = getMaterial("grass_carried.png",loader);
+    const side = getMaterial("stone.png", loader);
+    const top = getMaterial("grass_carried.png", loader);
+    const empty = new THREE.MeshBasicMaterial({ opacity: 0 });
+    empty.transparent = true
+    empty.depthTest = false
 
 
+    const box = new THREE.Mesh(geometry, [side, side, empty, empty, side, side]);
+    box.position.set(0, 0, -1);
 
-    const box = new THREE.Mesh(geometry, [side,side,side,side,top,side]);
+    const axesHelper = new THREE.AxesHelper(2.5);
+    scene.add(axesHelper);
     scene.add(box);
 
 
@@ -41,14 +47,20 @@ function init(MainCanvas: HTMLCanvasElement) {
         renderer.render(scene, camera);
         requestAnimationFrame(tick);
     }
+
+    /*
+    tobe
+    - Geometryとmaterialは使いまわし
+    - 
+    */
 }
 
 
-function getMaterial(p : string, loader : THREE.TextureLoader) : THREE.MeshBasicMaterial{
+function getMaterial(p: string, loader: THREE.TextureLoader): THREE.MeshBasicMaterial {
     const texture = loader.load("textures/" + p);
     texture.magFilter = THREE.NearestFilter;
-    const m = new THREE.MeshBasicMaterial( { 
-        map : texture
+    const m = new THREE.MeshBasicMaterial({
+        map: texture
     });
 
     return m;
