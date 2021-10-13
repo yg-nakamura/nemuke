@@ -30,7 +30,7 @@ class MeshBlock {
     }
 
     public getMesh(x: number, y: number, z: number): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]> {
-
+        console.log(this.sides)
         const box = new THREE.Mesh(geometry, [
             this.sides[Side.PX].getSide(),
             this.sides[Side.NX].getSide(),
@@ -68,8 +68,11 @@ class BlockSide {
 
 
 function registerSide(id: Block, texture: BlockSide, side?: Side) {
-    if (side) {
+    if (side !== undefined) {
         if (Sides[id]) {
+            Sides[id][side] = texture;
+        } else {
+            Sides[id] = {};
             Sides[id][side] = texture;
         }
     } else {
@@ -79,12 +82,12 @@ function registerSide(id: Block, texture: BlockSide, side?: Side) {
         registerSide(id, texture, Side.NY);
         registerSide(id, texture, Side.PZ);
         registerSide(id, texture, Side.NZ);
-
     }
 
 }
 
 function registerBlock(id: Block) {
+    console.log(Sides)
     Blocks[id] = new MeshBlock(Sides[id]);
 }
 
@@ -96,7 +99,13 @@ export function registerBlocks() {
 
     const stone_texture = new BlockSide("stone.png");
     const grass_texture = new BlockSide("grass_carried.png");
-    registerSide(Block.Stone, stone_texture);
+    registerSide(Block.Stone, stone_texture, Side.PX);
+    registerSide(Block.Stone, stone_texture, Side.NX);
+    registerSide(Block.Stone, stone_texture, Side.PY);
+    registerSide(Block.Stone, stone_texture, Side.NY);
+    registerSide(Block.Stone, grass_texture, Side.PZ);
+    registerSide(Block.Stone, grass_texture, Side.NZ);
+
 
     registerBlock(Block.Stone);
 
