@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+import {Block, registerBlocks, getBlock} from "../../world/block/MeshBlock"
+
 export default function main(MainCanvas?: HTMLCanvasElement) {
     if (!MainCanvas) return
     init(MainCanvas);
@@ -30,7 +32,10 @@ function init(MainCanvas: HTMLCanvasElement) {
     empty.depthTest = false
 
 
-    const box = new THREE.Mesh(geometry, [side, side, empty, empty, side, side]);
+    // const box = new THREE.Mesh(geometry, [side, side, empty, empty, side, side]);
+    registerBlocks();
+    const box = getBlock(Block.Stone);
+
     box.position.set(0, 0, -1);
 
     const axesHelper = new THREE.AxesHelper(2.5);
