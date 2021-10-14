@@ -23,12 +23,9 @@ export class BlockModel {
         for (let element of this.elements) {
             const mesh = element.getMesh();
             mesh.position.set(
-                pos.x + 0.5,
-                pos.y + 0.5,
-                pos.z + 0.5
-                /*pos.x + 0.5 + (element.from.x / 16) - (16 - element.to.x - element.from.x) / 32,
-                pos.y + 0.5 + (element.from.y / 16) - (16 - element.to.y - element.from.y) / 32,
-                pos.z + 0.5 + (element.from.z / 16) - (16 - element.to.z - element.from.z) / 32*/
+                pos.x + 0.5 + (element.from.x / 16) - (16 - element.to.x + element.from.x) / 32,
+                pos.y + 0.5 + (element.from.y / 16) - (16 - element.to.y + element.from.y) / 32,
+                pos.z + 0.5 + (element.from.z / 16) - (16 - element.to.z + element.from.z) / 32
             );
             meshes.push(mesh);
         }
@@ -66,12 +63,12 @@ class Element {
 
     public getMesh(): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]> {
         const box = new THREE.Mesh(this.geometry, [
-            this.faces[FaceType.down].getFacesMaterial(),
-            this.faces[FaceType.up].getFacesMaterial(),
-            this.faces[FaceType.north].getFacesMaterial(),
-            this.faces[FaceType.south].getFacesMaterial(),
-            this.faces[FaceType.west].getFacesMaterial(),
             this.faces[FaceType.east].getFacesMaterial(),
+            this.faces[FaceType.west].getFacesMaterial(),
+            this.faces[FaceType.up].getFacesMaterial(),
+            this.faces[FaceType.down].getFacesMaterial(),
+            this.faces[FaceType.south].getFacesMaterial(),
+            this.faces[FaceType.north].getFacesMaterial(),
         ]);
         return box;
     }
