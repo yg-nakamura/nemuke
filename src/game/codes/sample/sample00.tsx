@@ -1,6 +1,7 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { BlockStone } from '../../../nemuke/model/block/BlockStone';
 
 import {Block, registerBlocks, getBlock} from "../../world/block/MeshBlock"
 
@@ -33,14 +34,23 @@ function init(MainCanvas: HTMLCanvasElement) {
 
 
     // const box = new THREE.Mesh(geometry, [side, side, empty, empty, side, side]);
-    registerBlocks();
-    const box = getBlock(Block.Stone);
+    // registerBlocks();
+    // const box = getBlock(Block.Stone);
 
-    box.position.set(0, 0, -1);
+    // box.position.set(0, 0, -1);
 
     const axesHelper = new THREE.AxesHelper(2.5);
     scene.add(axesHelper);
-    scene.add(box);
+    // scene.add(box);
+
+    const stone = new BlockStone();
+
+    stone.spawnBlock({x:0, y:0, z:0},scene);
+    stone.spawnBlock({x:0, y:0, z:1},scene);
+    stone.spawnBlock({x:0, y:0, z:2},scene);
+    stone.spawnBlock({x:0, y:0, z:3},scene);
+    stone.spawnBlock({x:0, y:0, z:4},scene);
+    
 
 
     const controls = new OrbitControls(camera, renderer.domElement);
