@@ -1,62 +1,70 @@
 
+import { format } from 'path';
 import * as THREE from 'three';
 
-export class BlockModel{
-    
-    elements : Element[];
+export class BlockModel {
 
-    constructor(){
+    elements: Element[];
+
+    constructor() {
         this.elements = [];
     }
 
-    protected createElement(from : Vec3, to : Vec3) : Element{
+    protected createElement(from: Vec3, to: Vec3): Element {
         return new Element(from, to);
     }
 
-    protected pushElement(element : Element){
+    protected pushElement(element: Element) {
         this.elements.push(element);
     }
 
-    public getMeshes(pos : Vec3) : THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]>[]{
-        const meshes : THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]>[] = [];
-        for(let element of this.elements){
+    public getMeshes(pos: Vec3): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]>[] {
+        const meshes: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]>[] = [];
+        for (let element of this.elements) {
             const mesh = element.getMesh();
-            mesh.position.set(element.from.x + pos.x, element.from.y + pos.y, element.from.z + pos.z);
+            mesh.position.set(
+                pos.x + 0.5,
+                pos.y + 0.5,
+                pos.z + 0.5
+                /*pos.x + 0.5 + (element.from.x / 16) - (16 - element.to.x - element.from.x) / 32,
+                pos.y + 0.5 + (element.from.y / 16) - (16 - element.to.y - element.from.y) / 32,
+                pos.z + 0.5 + (element.from.z / 16) - (16 - element.to.z - element.from.z) / 32*/
+            );
             meshes.push(mesh);
         }
         return meshes;
     }
 
-    public spawnBlock(pos : Vec3, scene : THREE.Scene){
-        for(let m of this.getMeshes(pos)){
+    public spawnBlock(pos: Vec3, scene: THREE.Scene) {
+        for (let m of this.getMeshes(pos)) {
             scene.add(m)
         }
     }
 }
 
 type Vec3 = {
-    x : number,
-    y : number,
-    z : number
+    x: number,
+    y: number,
+    z: number
 }
-class Element{
+class Element {
 
-    from : Vec3;
-    to : Vec3;
-    faces : {[key:string]:Face} = {}; 
-    geometry : THREE.BoxGeometry;
+    from: Vec3;
+    to: Vec3;
+    faces: { [key: string]: Face } = {};
+    geometry: THREE.BoxGeometry;
 
-    constructor(from : Vec3, to : Vec3){
-        this.from  = from;
+    constructor(from: Vec3, to: Vec3) {
+        this.from = from;
         this.to = to;
-        this.geometry = new THREE.BoxGeometry(1, 1, 1);
+        this.geometry = new THREE.BoxGeometry((to.x - from.x) / 16, (to.y - from.y) / 16, (to.z - from.z) / 16);
     }
 
-    public createFace(type : FaceType, faceInfo : FaceInfo){
+    public createFace(type: FaceType, faceInfo: FaceInfo) {
         this.faces[type] = new Face(type, faceInfo);
     }
 
-    public getMesh() : THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]>{
+    public getMesh(): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]> {
         const box = new THREE.Mesh(this.geometry, [
             this.faces[FaceType.down].getFacesMaterial(),
             this.faces[FaceType.up].getFacesMaterial(),
@@ -70,8 +78,8 @@ class Element{
 }
 
 export type FaceInfo = {
-    folder : string,
-    texture : string
+    folder: string,
+    texture: string
 }
 
 export enum FaceType {
@@ -85,13 +93,13 @@ export enum FaceType {
     all = "all"
 }
 
-class Face{
+class Face {
 
-    type : FaceType;
-    faceInfo : FaceInfo;
-    material : THREE.MeshBasicMaterial;
+    type: FaceType;
+    faceInfo: FaceInfo;
+    material: THREE.MeshBasicMaterial;
 
-    constructor(type : FaceType, faceInfo : FaceInfo){
+    constructor(type: FaceType, faceInfo: FaceInfo) {
         this.type = type;
         this.faceInfo = faceInfo;
         const loader = new THREE.TextureLoader()
@@ -102,7 +110,7 @@ class Face{
         });
     }
 
-    public getFacesMaterial() : THREE.MeshBasicMaterial{
+    public getFacesMaterial(): THREE.MeshBasicMaterial {
         return this.material;
     }
 }

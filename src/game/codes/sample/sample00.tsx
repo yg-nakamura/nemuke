@@ -2,8 +2,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { BlockStone } from '../../../nemuke/model/block/BlockStone';
+import { BlockTest } from '../../../nemuke/model/block/BlockTest';
 
-import {Block, registerBlocks, getBlock} from "../../world/block/MeshBlock"
+import { Block, registerBlocks, getBlock } from "../../world/block/MeshBlock"
 
 export default function main(MainCanvas?: HTMLCanvasElement) {
     if (!MainCanvas) return
@@ -44,13 +45,14 @@ function init(MainCanvas: HTMLCanvasElement) {
     // scene.add(box);
 
     const stone = new BlockStone();
+    const test = new BlockTest();
 
-    stone.spawnBlock({x:0, y:0, z:0},scene);
-    stone.spawnBlock({x:0, y:0, z:1},scene);
-    stone.spawnBlock({x:0, y:0, z:2},scene);
-    stone.spawnBlock({x:0, y:0, z:3},scene);
-    stone.spawnBlock({x:0, y:0, z:4},scene);
-    
+    stone.spawnBlock({ x: 0, y: 0, z: 0 }, scene);
+    stone.spawnBlock({ x: 0, y: 0, z: 1 }, scene);
+    test.spawnBlock({ x: 0, y: 0, z: 2 }, scene);
+    stone.spawnBlock({ x: 0, y: 0, z: 3 }, scene);
+    stone.spawnBlock({ x: 0, y: 0, z: 4 }, scene);
+
 
 
     const controls = new OrbitControls(camera, renderer.domElement);
