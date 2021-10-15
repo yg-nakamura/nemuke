@@ -1,4 +1,3 @@
-import generate from "@babel/generator";
 import { Scene } from "three";
 import BlockId from "../block/BlockId";
 
@@ -42,8 +41,8 @@ export class World {
     }
 
     public generateWorld() {
-        for (let x = 0; x < 2; x++) {
-            for (let z = 0; z < 2; z++) {
+        for (let x = 0; x < 16; x++) {
+            for (let z = 0; z < 16; z++) {
                 this.getChunk(x, z).generateChunk();
             }
         }

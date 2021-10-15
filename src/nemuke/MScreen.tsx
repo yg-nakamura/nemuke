@@ -33,8 +33,8 @@ export class MScreen {
 
 
         const world = new World()
-        for (let x = 0; x < 10; x++) {
-            for (let z = 0; z < 10; z++) {
+        for (let x = 0; x < 16; x++) {
+            for (let z = 0; z < 16; z++) {
                 world.renderChunk(this.scene, x, z)
             }
         }

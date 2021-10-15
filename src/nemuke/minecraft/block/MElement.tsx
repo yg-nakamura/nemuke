@@ -1,6 +1,16 @@
 import * as THREE from 'three';
 import { Vec3 } from "./Vec3";
 import { Face, FaceInfo, FaceType } from './MFace';
+import EmptyFace from './EmptyGeometry';
+
+type faceFlag = {
+    down : boolean,
+    up  : boolean,
+    north  : boolean,
+    south  : boolean,
+    west  : boolean,
+    east  : boolean
+}
 
 export class MElement {
 
@@ -19,14 +29,14 @@ export class MElement {
         this.faces[type] = new Face(type, faceInfo);
     }
 
-    public getMesh(): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]> {
+    public getMesh(flag : faceFlag): THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial[]> {
         const box = new THREE.Mesh(this.geometry, [
-            this.faces[FaceType.east].getFacesMaterial(),
-            this.faces[FaceType.west].getFacesMaterial(),
-            this.faces[FaceType.up].getFacesMaterial(),
-            this.faces[FaceType.down].getFacesMaterial(),
-            this.faces[FaceType.south].getFacesMaterial(),
-            this.faces[FaceType.north].getFacesMaterial(),
+            flag.east ? EmptyFace : this.faces[FaceType.east].getFacesMaterial(),
+            flag.west ? EmptyFace : this.faces[FaceType.west].getFacesMaterial() ,
+            flag.up ? EmptyFace : this.faces[FaceType.up].getFacesMaterial() ,
+            flag.down ? EmptyFace : this.faces[FaceType.down].getFacesMaterial() ,
+            flag.south ? EmptyFace : this.faces[FaceType.south].getFacesMaterial() ,
+            flag.north ? EmptyFace : this.faces[FaceType.north].getFacesMaterial() 
         ]);
         return box;
     }

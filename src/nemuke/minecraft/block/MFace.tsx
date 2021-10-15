@@ -25,7 +25,7 @@ export class Face {
 
 export type FaceInfo = {
     folder: string,
-    texture: string
+    texture: string,
 }
 
 export enum FaceType {

@@ -47,11 +47,11 @@ function init(MainCanvas: HTMLCanvasElement) {
     const stone = new BlockStone();
     const test = new BlockTest();
 
-    stone.renderBlock({ x: 0, y: 0, z: 0 }, scene);
-    stone.renderBlock({ x: 0, y: 0, z: 1 }, scene);
-    test.renderBlock({ x: 0, y: 0, z: 2 }, scene);
-    stone.renderBlock({ x: 0, y: 0, z: 3 }, scene);
-    stone.renderBlock({ x: 0, y: 0, z: 4 }, scene);
+    // stone.renderBlock({ x: 0, y: 0, z: 0 }, scene);
+    // stone.renderBlock({ x: 0, y: 0, z: 1 }, scene);
+    // test.renderBlock({ x: 0, y: 0, z: 2 }, scene);
+    // stone.renderBlock({ x: 0, y: 0, z: 3 }, scene);
+    // stone.renderBlock({ x: 0, y: 0, z: 4 }, scene);
 
 
 

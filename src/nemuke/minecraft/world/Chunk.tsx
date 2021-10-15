@@ -44,7 +44,18 @@ export class Chunk {
                 for (let z = 0; z < 16; z++) {
                     if (this.getBlock(x, y, z)) {
                         let block = Block.getBlockByID(this.getBlock(x, y, z));
-                        block.renderBlock({ x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z }, scene);
+                        
+                        block.renderBlock(
+                            { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
+                            scene,
+                            {
+                                east : x < 15 ? this.getBlock(x+1,y,z) : 0,
+                                west : x > 1 ? this.getBlock(x-1,y,z) : 0,
+                                up   : y < 255 ? this.getBlock(x,y+1,z) : 0,
+                                down : y > 1 ? this.getBlock(x,y-1,z) : 1,
+                                south: z < 15 ? this.getBlock(x,y,z+1) : 0,
+                                north: z > 1 ? this.getBlock(x,y,z-1) : 0,
+                            });
                     }
                 }
             }
