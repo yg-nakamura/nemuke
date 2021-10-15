@@ -1,6 +1,7 @@
 import React, { useState, useEffect, MouseEventHandler } from "react";
+import { MScreen } from "../nemuke/MScreen";
 
-import sample00 from './codes/sample/sample00'
+import sample00 from './sample00'
 
 export default function Core() {
 
@@ -10,7 +11,8 @@ export default function Core() {
         console.log('use effect');
         const canvas = canvasRef.current;
         if (!canvas) return;
-        sample00(canvas)
+        // sample00(canvas)
+        new MScreen(canvas);
     }, []);
 
     return (

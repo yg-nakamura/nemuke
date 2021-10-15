@@ -1,4 +1,5 @@
-import { BlockModel, FaceType } from "../BlockModel";
+import { BlockModel } from "../BlockModel";
+import { FaceType } from "../MFace";
 
 export class BlockTest extends BlockModel {
     constructor() {

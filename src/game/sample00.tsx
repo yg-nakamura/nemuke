@@ -1,10 +1,10 @@
 
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BlockStone } from '../../../nemuke/model/block/BlockStone';
-import { BlockTest } from '../../../nemuke/model/block/BlockTest';
+import { BlockStone } from '../nemuke/minecraft/block/blocks/BlockStone';
+import { BlockTest } from '../nemuke/minecraft/block/blocks/BlockTest';
 
-import { Block, registerBlocks, getBlock } from "../../world/block/MeshBlock"
+
 
 export default function main(MainCanvas?: HTMLCanvasElement) {
     if (!MainCanvas) return
