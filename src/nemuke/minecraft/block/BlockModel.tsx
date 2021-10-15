@@ -33,7 +33,7 @@ export class BlockModel {
         return meshes;
     }
 
-    public spawnBlock(pos: Vec3, scene: THREE.Scene) {
+    public renderBlock(pos: Vec3, scene: THREE.Scene) {
         for (let m of this.getMeshes(pos)) {
             scene.add(m)
         }
