@@ -17,7 +17,7 @@ export class MScreen {
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
 
-    constructor(mainCanvas: HTMLCanvasElement) {
+    constructor(mainCanvas: HTMLCanvasElement, renderInfo: HTMLDivElement) {
         this.world = new World();
         this.canvas = mainCanvas;
 
@@ -42,6 +42,7 @@ export class MScreen {
         update();
         function update() {
             p.renderer.render(p.scene, p.camera);
+            renderInfo.innerHTML =  JSON.stringify(p.renderer.info.render);
             requestAnimationFrame(update);
         }
     }
