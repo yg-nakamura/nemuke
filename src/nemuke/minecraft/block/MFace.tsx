@@ -5,6 +5,7 @@ export class Face {
     type: FaceType;
     faceInfo: FaceInfo;
     material: THREE.MeshBasicMaterial;
+    geometry : THREE.PlaneGeometry;
 
     constructor(type: FaceType, faceInfo: FaceInfo) {
         this.type = type;
@@ -15,10 +16,16 @@ export class Face {
         this.material = new THREE.MeshBasicMaterial({
             map: texture
         });
+
+        this.geometry =  new THREE.PlaneGeometry( 1 , 1 );
     }
 
     public getFacesMaterial(): THREE.MeshBasicMaterial {
         return this.material;
+    }
+
+    public getPlaneGeometry() : THREE.PlaneGeometry{
+       return this.geometry;
     }
 
 }

@@ -55,7 +55,7 @@ export class MScreen {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, this.width / this.height);
         camera.position.set(15, 15, 15);
-
+        scene.background = new THREE.Color( 0xbfd1e5 );
         return { scene: scene, renderer: renderer, camera: camera };
     }
 

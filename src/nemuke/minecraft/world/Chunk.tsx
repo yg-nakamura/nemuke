@@ -1,6 +1,7 @@
-import { Scene } from "three";
+import * as THREE from 'three';
 import Block from "../block/Block";
 import BlockId from "../block/BlockId";
+import * as  BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils"
 
 export class Chunk {
 
@@ -38,16 +39,29 @@ export class Chunk {
         this.blockIdMap[sp] = id;
     }
 
-    public render(scene: Scene) {
+    public render(scene: THREE.Scene) {
+        // ジオメトリーのリスト
+        let geometries : THREE.BufferGeometry[] = [];
+
         for (let y = 0; y < 256; y++) {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (this.getBlock(x, y, z)) {
                         let block = Block.getBlockByID(this.getBlock(x, y, z));
                         
-                        block.renderBlock(
+                        // block.renderBlock(
+                        //     { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
+                        //     scene,
+                        //     {
+                        //         east : x < 15 ? this.getBlock(x+1,y,z) : 0,
+                        //         west : x > 1 ? this.getBlock(x-1,y,z) : 0,
+                        //         up   : y < 255 ? this.getBlock(x,y+1,z) : 0,
+                        //         down : y > 1 ? this.getBlock(x,y-1,z) : 1,
+                        //         south: z < 15 ? this.getBlock(x,y,z+1) : 0,
+                        //         north: z > 1 ? this.getBlock(x,y,z-1) : 0,
+                        //     });
+                        block.pushGeometries( geometries,
                             { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
-                            scene,
                             {
                                 east : x < 15 ? this.getBlock(x+1,y,z) : 0,
                                 west : x > 1 ? this.getBlock(x-1,y,z) : 0,
@@ -60,6 +74,17 @@ export class Chunk {
                 }
             }
         }
+
+        const geometry = BufferGeometryUtils.mergeBufferGeometries( geometries );
+        geometry.computeBoundingSphere();
+        const texture = new THREE.TextureLoader().load( 'texture/stone.png' );
+        texture.magFilter = THREE.NearestFilter;
+
+        const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } ) );
+        scene.add( mesh );
+
+        console.log(geometries);
+
     }
 
     public generateChunk() {

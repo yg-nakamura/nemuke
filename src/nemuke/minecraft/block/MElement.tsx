@@ -40,4 +40,39 @@ export class MElement {
         ]);
         return box;
     }
+
+    public getGeometries(flag : faceFlag) :  THREE.PlaneGeometry[]{
+        let geometries : THREE.PlaneGeometry[] = [];
+        if(!flag.east){
+            let geometry = this.faces[FaceType.east].getPlaneGeometry();
+            // geometry.attributes.uv.array[ 1 ] = 0.5;
+            geometry.rotateY(Math.PI / 2);
+            geometry.translate( 0.5, 0, 0 );
+            geometries.push(geometry);
+        }
+        if(!flag.west){
+            let geometry = this.faces[FaceType.east].getPlaneGeometry();
+            geometry.rotateY(- Math.PI / 2);
+            geometry.translate( -0.5, 0, 0 );
+            geometries.push(geometry);
+        }
+        if(!flag.up){
+            let geometry = this.faces[FaceType.east].getPlaneGeometry();
+            geometry.rotateY(- Math.PI / 2);
+            geometry.translate( 0, 50, 0 );
+            geometries.push(geometry);
+        }
+        if(!flag.south){
+            let geometry = this.faces[FaceType.east].getPlaneGeometry();
+            geometry.translate( 0, 0, 50 );
+            geometries.push(geometry);
+        }
+        if(!flag.up){
+            let geometry = this.faces[FaceType.east].getPlaneGeometry();
+            geometry.rotateY( Math.PI );
+            geometry.translate( 0, 0, - 50 );
+            geometries.push(geometry);
+        }
+        return geometries;
+    }
 }
