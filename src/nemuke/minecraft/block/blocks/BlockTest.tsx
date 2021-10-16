@@ -4,13 +4,22 @@ import { FaceType } from "../MFace";
 export class BlockTest extends BlockModel {
     constructor() {
         super();
-        const element = this.createElement({ x: 2, y: 2, z: 2 }, { x: 14, y: 14, z: 14 });
-        element.createFace(FaceType.down, { folder: "texture/", texture: "stone.png" });
-        element.createFace(FaceType.up, { folder: "texture/", texture: "stone.png" });
-        element.createFace(FaceType.east, { folder: "texture/", texture: "grass_carried.png" });
-        element.createFace(FaceType.north, { folder: "texture/", texture: "grass_carried.png" });
-        element.createFace(FaceType.south, { folder: "texture/", texture: "grass_carried.png" });
-        element.createFace(FaceType.west, { folder: "texture/", texture: "grass_carried.png" });
+        const element = this.createElement({ x: 1, y: 1, z: 1  }, { x: 12, y: 12, z: 12 });
+        element.createFace(FaceType.down, {uv:[0,0.5,0.5,0.5,0,0,0.5,0]});
+        element.createFace(FaceType.up, {uv:[0,0.5,0.5,0.5,0,0,0.5,0]});
+        element.createFace(FaceType.east, {uv:[0,0.5,0.5,0.5,0,0,0.5,0]});
+        element.createFace(FaceType.north, {uv:[0,0.5,0.5,0.5,0,0,0.5,0]});
+        element.createFace(FaceType.south, {uv:[0,0.5,0.5,0.5,0,0,0.5,0]});
+        element.createFace(FaceType.west, {uv:[0,0.5,0.5,0.5,0,0,0.5,0]});
         this.pushElement(element)
+
+        this.isFullFace = {
+            down : false,
+            up : false,
+            north : false,
+            south : false,
+            west : false,
+            east : false
+        }
     }
 }

@@ -49,17 +49,6 @@ export class Chunk {
                     if (this.getBlock(x, y, z)) {
                         let block = Block.getBlockByID(this.getBlock(x, y, z));
                         
-                        // block.renderBlock(
-                        //     { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
-                        //     scene,
-                        //     {
-                        //         east : x < 15 ? this.getBlock(x+1,y,z) : 0,
-                        //         west : x > 1 ? this.getBlock(x-1,y,z) : 0,
-                        //         up   : y < 255 ? this.getBlock(x,y+1,z) : 0,
-                        //         down : y > 1 ? this.getBlock(x,y-1,z) : 1,
-                        //         south: z < 15 ? this.getBlock(x,y,z+1) : 0,
-                        //         north: z > 1 ? this.getBlock(x,y,z-1) : 0,
-                        //     });
                         block.pushGeometries( geometries,
                             { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
                             {
@@ -83,8 +72,6 @@ export class Chunk {
         const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } ) );
         scene.add( mesh );
 
-        console.log(geometries);
-
     }
 
     public generateChunk() {
@@ -92,8 +79,12 @@ export class Chunk {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (y === 3) {
-                        this.setBlock(x, y, z, BlockId.stone);
-                    } else {
+                        if( z === 5) {
+                            this.setBlock(x, y, z, BlockId.test);
+                        }else {
+                            this.setBlock(x, y, z, BlockId.stone);
+                        }
+                    }else {
                         this.setBlock(x, y, z, BlockId.air);
                     }
                 }
