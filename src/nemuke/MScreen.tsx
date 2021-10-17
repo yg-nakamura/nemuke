@@ -21,6 +21,9 @@ export class MScreen {
         this.world = new World();
         this.canvas = mainCanvas;
 
+        this.width = mainCanvas.clientWidth;
+        this.height = mainCanvas.clientHeight;
+
         const p = this.init();
         this.renderer = p.renderer;
         this.scene = p.scene;
@@ -39,10 +42,27 @@ export class MScreen {
             }
         }
 
+        window.addEventListener('keydown', e => {
+            //65 left
+            //68 right
+            //87 up
+            //83 down
+            if (e.keyCode == 65) {
+                this.translateCameraXZ(-0.5, 0);
+            } else if (e.keyCode == 68) {
+                this.translateCameraXZ(0.5, 0);
+            } else if (e.keyCode == 87) {
+                this.translateCameraXZ(0, 0.5);
+            } else if (e.keyCode == 83) {
+                this.translateCameraXZ(0, -0.5);
+            }
+        })
+
         update();
+
         function update() {
             p.renderer.render(p.scene, p.camera);
-            renderInfo.innerHTML =  JSON.stringify(p.renderer.info.render);
+            renderInfo.innerHTML = JSON.stringify(p.renderer.info.render);
             requestAnimationFrame(update);
         }
     }
@@ -55,7 +75,7 @@ export class MScreen {
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, this.width / this.height);
         camera.position.set(15, 15, 15);
-        scene.background = new THREE.Color( 0xbfd1e5 );
+        scene.background = new THREE.Color(0xbfd1e5);
         return { scene: scene, renderer: renderer, camera: camera };
     }
 
@@ -69,5 +89,9 @@ export class MScreen {
         controls.update();
     }
 
-
+    public translateCameraXZ(x: number, z: number) {
+        this.camera.translateX(x);
+        // this.camera.translateY(y);
+        this.camera.translateZ(z);
+    }
 }
