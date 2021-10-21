@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { Vec3 } from "./Vec3";
 import { Face, FaceInfo, FaceType } from './MFace';
-import EmptyFace from './EmptyGeometry';
 
 type faceFlag = {
     down : boolean,
@@ -30,9 +29,6 @@ export class MElement {
         const sx = (this.to.x - this.from.x)/16;
         const sy = (this.to.y - this.from.y)/16;
         const sz = (this.to.z - this.from.z)/16
-        const rx = (this.from.x/16 - (1 - sx)/2);
-        const ry = (this.from.y/16 - (1 - sy)/2);
-        const rz = (this.from.z/16 - (1 - sz)/2);
         switch(type){
             case FaceType.north:　//z-
                 face.getPlaneGeometry().scale(sx, sy, 0)

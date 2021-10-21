@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { World } from "./minecraft/world/World";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { MTextureLoader } from './minecraft/block/MTextureLoader';
 import Block from './minecraft/block/Block';
-import BlockId from './minecraft/block/BlockId';
+
 
 export class MScreen {
 
@@ -17,9 +18,12 @@ export class MScreen {
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
 
-    constructor(mainCanvas: HTMLCanvasElement, renderInfo: HTMLDivElement) {
+    mtexture : MTextureLoader;
+
+    constructor(mainCanvas: HTMLCanvasElement, renderInfo: HTMLDivElement | null, mtexture : MTextureLoader) {
         this.world = new World();
         this.canvas = mainCanvas;
+        this.mtexture = mtexture;
 
         this.width = mainCanvas.clientWidth;
         this.height = mainCanvas.clientHeight;
@@ -34,6 +38,7 @@ export class MScreen {
         this.enableAxesHelper();
         this.enableOrbitControls();
 
+        Block.setMTexture(mtexture);
 
         const world = new World()
         for (let x = 0; x < 1; x++) {
@@ -47,13 +52,13 @@ export class MScreen {
             //68 right
             //87 up
             //83 down
-            if (e.keyCode == 65) {
+            if (e.keyCode === 65) {
                 this.translateCameraXZ(-0.5, 0);
-            } else if (e.keyCode == 68) {
+            } else if (e.keyCode === 68) {
                 this.translateCameraXZ(0.5, 0);
-            } else if (e.keyCode == 87) {
+            } else if (e.keyCode === 87) {
                 this.translateCameraXZ(0, 0.5);
-            } else if (e.keyCode == 83) {
+            } else if (e.keyCode === 83) {
                 this.translateCameraXZ(0, -0.5);
             }
         })
@@ -62,7 +67,9 @@ export class MScreen {
 
         function update() {
             p.renderer.render(p.scene, p.camera);
-            renderInfo.innerHTML = JSON.stringify(p.renderer.info.render);
+            if(renderInfo){
+                renderInfo.innerHTML = JSON.stringify(p.renderer.info.render);
+            }
             requestAnimationFrame(update);
         }
     }

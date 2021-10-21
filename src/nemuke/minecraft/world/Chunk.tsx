@@ -66,10 +66,10 @@ export class Chunk {
 
         const geometry = BufferGeometryUtils.mergeBufferGeometries( geometries );
         geometry.computeBoundingSphere();
-        const texture = new THREE.TextureLoader().load( 'texture/stone.png' );
-        texture.magFilter = THREE.NearestFilter;
-
-        const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } ) );
+        // const texture = new THREE.TextureLoader().load( 'texture/stone.png' );
+        // texture.magFilter = THREE.NearestFilter;
+        console.log(Block.getTexture());
+        const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: Block.getTexture(), side: THREE.DoubleSide } ) );
         scene.add( mesh );
 
     }
@@ -80,9 +80,9 @@ export class Chunk {
                 for (let z = 0; z < 16; z++) {
                     if (y === 3) {
                         if( z === 5) {
-                            this.setBlock(x, y, z, BlockId.test);
-                        }else {
                             this.setBlock(x, y, z, BlockId.stone);
+                        }else {
+                            this.setBlock(x, y, z, BlockId.grass);
                         }
                     }else {
                         this.setBlock(x, y, z, BlockId.air);

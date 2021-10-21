@@ -1,5 +1,6 @@
 import { Scene } from "three";
 import BlockId from "../block/BlockId";
+import { MTextureLoader } from "../block/MTextureLoader";
 
 import { Chunk } from "./Chunk";
 
