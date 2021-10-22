@@ -29,34 +29,31 @@ export class MTextureLoader{
         this.canvas = canvas;
     }
 
+
     loadImageFile(callback : any){
-        let cont = this.loadTextureList.length;
+        let counter = {
+            n : this.loadTextureList.length
+        }
         const ctx = this.canvas.getContext("2d");
         if(ctx == null) return;
         const images : {[key:string] : HTMLImageElement } = {};
-        let width = 0;
-        let height = 0;
+        ctx.canvas.width = 0;
+        ctx.canvas.height = 0;
         for(let file of this.loadTextureList){
             const image = new Image();
             image.src = "texture/"+file+".png"
-            
-            
             image.onload = () => {
                 images[file] = image;
-                width += image.width;
-                if(height < image.height){
-                    height = image.height;
+                ctx.canvas.width += image.width;
+                if(ctx.canvas.height < image.height){
+                    ctx.canvas.height = image.height;
                 } 
-                cont--;
-                if(cont === 0){
-                    ctx.canvas.width = width;
-                    ctx.canvas.height = height;
-                    console.log(this.canvas.width);
+                counter.n--;
+                if(counter.n === 0){
                     this.applyToCantext(images, ctx, callback);
                 }
             }
         }
-
     }
 
     public applyToCantext(images : {[key:string] : HTMLImageElement }, ctx : CanvasRenderingContext2D, callback : any){

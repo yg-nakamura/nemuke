@@ -36,7 +36,6 @@ export class MElement {
                 break;
             case FaceType.south: //z+
                 face.getPlaneGeometry().scale(sx, sy, 0)
-                console.log((1 - sz)/2);
                 face.getPlaneGeometry().translate(0,0,sz/2)
                 break;
             case FaceType.west: //x-

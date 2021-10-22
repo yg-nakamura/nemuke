@@ -14,9 +14,6 @@ class BlockClass {
     texture:THREE.Texture = new THREE.Texture();
     mtexture? : MTextureLoader;
 
-    constructor() {
-
-    }
 
     public getBlockByID(id?: BlockId) {
         if(id){
@@ -25,17 +22,19 @@ class BlockClass {
         return this.blocks[BlockId.air];
     }
 
-    public setMTexture(mtexture : MTextureLoader){
-        this.mtexture = mtexture;
+    private registerBlocks(){
         this.blocks[BlockId.air] = new BlockAir();
         this.blocks[BlockId.stone] = new BlockStone();
         this.blocks[BlockId.grass] = new BlockGrass();
         this.blocks[BlockId.torch] = new BlockTorch();
+    }
 
+    public setMTexture(mtexture : MTextureLoader){
+        this.mtexture = mtexture;
+        this.registerBlocks();
         //Create Texture 
         this.texture = new THREE.CanvasTexture(mtexture.getCanvas());
         this.texture.magFilter = THREE.NearestFilter;
-        
     }
 
     public getUVMap(name : string, uv? : number[]) : number[]{

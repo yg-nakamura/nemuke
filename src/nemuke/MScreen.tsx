@@ -34,7 +34,6 @@ export class MScreen {
         this.scene = p.scene;
         this.camera = p.camera;
 
-        console.log(p);
 
         this.enableAxesHelper();
         this.enableOrbitControls();

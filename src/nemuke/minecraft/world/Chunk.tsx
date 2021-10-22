@@ -36,7 +36,7 @@ export class Chunk {
 
         let sp = (py << 8) + (px << 4) + pz
 
-        if(id != BlockId.air){
+        if(id !== BlockId.air){
             this.blockIdMap[sp] = id;
         }
     }
@@ -68,9 +68,7 @@ export class Chunk {
 
         const geometry = BufferGeometryUtils.mergeBufferGeometries( geometries );
         geometry.computeBoundingSphere();
-        // const texture = new THREE.TextureLoader().load( 'texture/stone.png' );
-        // texture.magFilter = THREE.NearestFilter;
-        console.log(Block.getTexture());
+
         const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( 
             { 
                 map: Block.getTexture(),

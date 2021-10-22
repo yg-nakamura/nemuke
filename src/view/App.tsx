@@ -1,7 +1,7 @@
 import React, {  useEffect } from "react";
 import { MTextureLoader } from "../nemuke/minecraft/block/MTextureLoader";
 import { MScreen } from "../nemuke/MScreen";
-import {CanvasElement, Controll, ControllDown, ControllLeft, ControllRight, ControllUp, Debug, Parent, UDRLController} from "./components/Controlles"
+import {CanvasElement,  Parent} from "./components/Controlles"
 
 export default function App() {
 
@@ -21,8 +21,6 @@ export default function App() {
     }
 
     useEffect(() => {
-        console.log('use effect');
-
         if(imgCanvasRef.current){
             const mtexture = new MTextureLoader(imgCanvasRef.current);
             mtexture.loadImageFile(init);
