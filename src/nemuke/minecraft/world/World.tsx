@@ -1,6 +1,5 @@
 import { Scene } from "three";
 import BlockId from "../block/BlockId";
-import { MTextureLoader } from "../block/MTextureLoader";
 
 import { Chunk } from "./Chunk";
 
@@ -14,17 +13,20 @@ export class World {
 
     public getBlock(x: number, y: number, z: number): BlockId {
         let chunkX = x / 16;
-        let chunkZ = x / 16;
-        return this.chunkMap[chunkX][chunkZ].getBlock(chunkX, y, chunkZ);
+        let chunkZ = z / 16;
+        return this.getChunk(chunkX, chunkZ).getBlock(x, y, z);
     }
 
     public setBlock(x: number, y: number, z: number, id: BlockId) {
         let chunkX = x / 16;
-        let chunkZ = x / 16;
-        this.chunkMap[chunkX][chunkZ].setBlock(chunkX, y, chunkZ, id);
+        let chunkZ = z / 16;
+        this.getChunk(chunkX, chunkZ).setBlock(x, y, z, id);
     }
 
     public getChunk(x: number, z: number): Chunk {
+        x = Math.floor(x);
+        z = Math.floor(z);
+
         if (this.chunkMap[x]) {
             if (this.chunkMap[x][z]) {
                 return this.chunkMap[x][z];

@@ -3,6 +3,7 @@ import { World } from "./minecraft/world/World";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { MTextureLoader } from './minecraft/block/MTextureLoader';
 import Block from './minecraft/block/Block';
+import BlockId from './minecraft/block/BlockId';
 
 
 export class MScreen {
@@ -41,27 +42,30 @@ export class MScreen {
         Block.setMTexture(mtexture);
 
         const world = new World()
+
+        world.setBlock(3,4,3, BlockId.torch);
+
         for (let x = 0; x < 1; x++) {
             for (let z = 0; z < 1; z++) {
                 world.renderChunk(this.scene, x, z)
             }
         }
 
-        window.addEventListener('keydown', e => {
-            //65 left
-            //68 right
-            //87 up
-            //83 down
-            if (e.keyCode === 65) {
-                this.translateCameraXZ(-0.5, 0);
-            } else if (e.keyCode === 68) {
-                this.translateCameraXZ(0.5, 0);
-            } else if (e.keyCode === 87) {
-                this.translateCameraXZ(0, 0.5);
-            } else if (e.keyCode === 83) {
-                this.translateCameraXZ(0, -0.5);
-            }
-        })
+        // window.addEventListener('keydown', e => {
+        //     //65 left
+        //     //68 right
+        //     //87 up
+        //     //83 down
+        //     if (e.keyCode === 65) {
+        //         this.translateCameraXZ(-0.5, 0);
+        //     } else if (e.keyCode === 68) {
+        //         this.translateCameraXZ(0.5, 0);
+        //     } else if (e.keyCode === 87) {
+        //         this.translateCameraXZ(0, 0.5);
+        //     } else if (e.keyCode === 83) {
+        //         this.translateCameraXZ(0, -0.5);
+        //     }
+        // })
 
         update();
 

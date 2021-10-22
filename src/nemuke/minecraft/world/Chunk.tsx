@@ -36,7 +36,9 @@ export class Chunk {
 
         let sp = (py << 8) + (px << 4) + pz
 
-        this.blockIdMap[sp] = id;
+        if(id != BlockId.air){
+            this.blockIdMap[sp] = id;
+        }
     }
 
     public render(scene: THREE.Scene) {
@@ -53,11 +55,11 @@ export class Chunk {
                             { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
                             {
                                 east : x < 15 ? this.getBlock(x+1,y,z) : 0,
-                                west : x > 1 ? this.getBlock(x-1,y,z) : 0,
+                                west : x > 0 ? this.getBlock(x-1,y,z) : 0,
                                 up   : y < 255 ? this.getBlock(x,y+1,z) : 0,
-                                down : y > 1 ? this.getBlock(x,y-1,z) : 1,
+                                down : y > 0 ? this.getBlock(x,y-1,z) : 1,
                                 south: z < 15 ? this.getBlock(x,y,z+1) : 0,
-                                north: z > 1 ? this.getBlock(x,y,z-1) : 0,
+                                north: z > 0 ? this.getBlock(x,y,z-1) : 0,
                             });
                     }
                 }
@@ -69,7 +71,13 @@ export class Chunk {
         // const texture = new THREE.TextureLoader().load( 'texture/stone.png' );
         // texture.magFilter = THREE.NearestFilter;
         console.log(Block.getTexture());
-        const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: Block.getTexture(), side: THREE.DoubleSide } ) );
+        const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( 
+            { 
+                map: Block.getTexture(),
+                side: THREE.FrontSide,
+                alphaTest: 0.5,
+            }));
+
         scene.add( mesh );
 
     }
@@ -79,11 +87,7 @@ export class Chunk {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (y === 3) {
-                        if( z === 5) {
-                            this.setBlock(x, y, z, BlockId.stone);
-                        }else {
-                            this.setBlock(x, y, z, BlockId.grass);
-                        }
+                        this.setBlock(x, y, z, BlockId.grass);
                     }else {
                         this.setBlock(x, y, z, BlockId.air);
                     }

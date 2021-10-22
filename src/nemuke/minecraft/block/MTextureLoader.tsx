@@ -13,11 +13,12 @@ export class MTextureLoader{
     canvas : HTMLCanvasElement;
 
     loadTextureList = [
-        "stone",
-        "dirt",
-        "grass_carried",
-        "grass_side_carried",
-        "glazed_terracotta_lime",
+        "blocks/stone",
+        "blocks/dirt",
+        "blocks/grass_carried",
+        "blocks/grass_side_carried",
+        "blocks/glazed_terracotta_lime",
+        "blocks/torch_on"
     ]
 
     textures : {[key:string]:MTexture} = {};
@@ -74,18 +75,21 @@ export class MTextureLoader{
         callback(this);
     }
 
-    public getUVMap(name : string) : number[]{
+    public getUVMap(name : string, uv : number[]) : number[]{
         const texture = this.textures[name];
-
-        const offset = texture.offset / this.canvas.width;
-        const width = texture.width / this.canvas.width;
-        const height = texture.height / this.canvas.height;
+        const t = 16 - uv[1];
+        uv[1] = 16 - uv[3];
+        uv[3] = t;
+        const offsetx = (texture.offset + (uv[0]/16) * texture.width) / this.canvas.width;
+        const width = texture.width / this.canvas.width * ((uv[2]-uv[0])/16);
+        const height = texture.height / this.canvas.height * ((uv[3]-uv[1])/16) ;
+        const offsety = uv[1] / 16; 
 
         return [
-            offset          ,height,
-            offset + width  ,height,
-            offset          ,0,
-            offset + width  ,0
+            offsetx            ,offsety + height,
+            offsetx + width    ,offsety + height,
+            offsetx            ,offsety,
+            offsetx + width    ,offsety
         ];
     }
 

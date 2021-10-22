@@ -6,9 +6,9 @@ export class BlockGrass extends BlockModel{
     constructor(){
         super();
         
-        const uvtop = Block.getUVMap("grass_carried");
-        const uvside = Block.getUVMap("grass_side_carried");
-        const uvdown = Block.getUVMap("dirt");
+        const uvtop = Block.getUVMap("blocks/grass_carried");
+        const uvside = Block.getUVMap("blocks/grass_side_carried");
+        const uvdown = Block.getUVMap("blocks/dirt");
 
         const element = this.createElement({x:0,y:0,z:0},{x:16,y:16,z:16});
         element.createFace(FaceType.down, {uv:uvdown});
