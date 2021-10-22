@@ -1,7 +1,4 @@
 {
-   "num_mip_levels" : 4,
-   "padding" : 8,
-   "resource_pack_name" : "vanilla",
    "texture_data" : {
       "acacia_planks" : {
          "textures" : "textures/blocks/planks_acacia"
@@ -3207,6 +3204,5 @@
       "yellow_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_yellow"
       }
-   },
-   "texture_name" : "atlas.terrain"
+   }
 }

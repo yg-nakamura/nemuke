@@ -49,7 +49,7 @@ export class Chunk {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (this.getBlock(x, y, z)) {
-                        let block = Block.getBlockByID(this.getBlock(x, y, z));
+                        let block = Block.getBlockModelByID(this.getBlock(x, y, z));
                         
                         block.pushGeometries( geometries,
                             { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
@@ -85,7 +85,7 @@ export class Chunk {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (y === 3) {
-                        this.setBlock(x, y, z, BlockId.grass);
+                        this.setBlock(x, y, z, BlockId.stone);
                     }else {
                         this.setBlock(x, y, z, BlockId.air);
                     }

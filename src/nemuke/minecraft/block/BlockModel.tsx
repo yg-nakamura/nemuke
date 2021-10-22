@@ -18,18 +18,18 @@ type faceFlag = {
 export class BlockModel {
 
     
-    elements: MElement[];
+    private elements: MElement[];
     public isFullFace : faceFlag;
 
     constructor() {
         this.elements = [];
         this.isFullFace = {
-            down : true,
-            up : true,
-            north : true,
-            south : true,
-            west : true,
-            east : true
+            down : false,
+            up : false,
+            north : false,
+            south : false,
+            west : false,
+            east : false
         }
     }
 
@@ -57,28 +57,22 @@ export class BlockModel {
             (this.isFullFace.down && this.isFullFace.up && this.isFullFace.north && 
              this.isFullFace.south && this.isFullFace.west && this.isFullFace.east)
             ){
-                if(Block.getBlockByID(adjBlocks.east).isFullFace.west){
-                    // eastは描写しない
+                if(Block.getBlockModelByID(adjBlocks.east).isFullFace.west){
                     flag.east = true;
                 }
-                if(Block.getBlockByID(adjBlocks.west).isFullFace.east){
-                    // westは描写しない
+                if(Block.getBlockModelByID(adjBlocks.west).isFullFace.east){
                     flag.west = true;
                 }
-                if(Block.getBlockByID(adjBlocks.up).isFullFace.down){
-                    // upは描写しない
+                if(Block.getBlockModelByID(adjBlocks.up).isFullFace.down){
                     flag.up = true;
                 }
-                if(Block.getBlockByID(adjBlocks.down).isFullFace.up){
-                    // downは描写しない
+                if(Block.getBlockModelByID(adjBlocks.down).isFullFace.up){
                     flag.down = true;
                 }
-                if(Block.getBlockByID(adjBlocks.south).isFullFace.north){
-                    // southは描写しない
+                if(Block.getBlockModelByID(adjBlocks.south).isFullFace.north){
                     flag.south = true;
                 }
-                if(Block.getBlockByID(adjBlocks.north).isFullFace.south){
-                    // northは描写しない
+                if(Block.getBlockModelByID(adjBlocks.north).isFullFace.south){
                     flag.north = true;
                 }
         }
@@ -98,6 +92,10 @@ export class BlockModel {
                 geometries.push(g.clone().translate(offsetPos[0],offsetPos[1],offsetPos[2]));
             }
         }
+    }
+
+    protected getUV(path : string) : number[]{
+        return Block.getUVMap(path);
     }
 }
 

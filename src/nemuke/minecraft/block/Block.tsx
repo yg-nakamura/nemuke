@@ -1,37 +1,43 @@
 import * as THREE from 'three';
 import BlockId from "./BlockId";
 import { BlockModel } from "./BlockModel";
-import { BlockAir } from "./blocks/BlockAir";
-import { BlockGrass } from './blocks/BlockGrass';
-import { BlockStone } from "./blocks/BlockStone";
-import { BlockTorch } from './blocks/BlockTorch';
+import blockstate from './BlockState';
+import { Air } from './models/Air';
+import ModelId from './ModelId';
+import Stone from './models/Stone';
 import { MTextureLoader } from "./MTextureLoader";
+import { registerCubeAllBlocks } from './models/register/Registers';
 
 
 class BlockClass {
 
+    models: { [key: number] : BlockModel} = {};
     blocks: { [key: number]: BlockModel } = {};
     texture:THREE.Texture = new THREE.Texture();
     mtexture? : MTextureLoader;
 
 
-    public getBlockByID(id?: BlockId) {
-        if(id){
-            return this.blocks[id];
+    public getBlockModelByID(id?: BlockId) {
+        if(id && blockstate[id]){
+            return this.getBlockModelByIdAndData(id,0);
         }
-        return this.blocks[BlockId.air];
+        return this.models[ModelId.air];
     }
 
-    private registerBlocks(){
-        this.blocks[BlockId.air] = new BlockAir();
-        this.blocks[BlockId.stone] = new BlockStone();
-        this.blocks[BlockId.grass] = new BlockGrass();
-        this.blocks[BlockId.torch] = new BlockTorch();
+    public getBlockModelByIdAndData(id: BlockId, data: number) {
+        return this.models[blockstate[id].models[data].model];
     }
+
+    private registerBlockModel(){
+        this.models[ModelId.air] = new Air();
+        this.models[ModelId.stone] = new Stone();
+        registerCubeAllBlocks(this.models);
+    }
+
 
     public setMTexture(mtexture : MTextureLoader){
         this.mtexture = mtexture;
-        this.registerBlocks();
+        this.registerBlockModel();
         //Create Texture 
         this.texture = new THREE.CanvasTexture(mtexture.getCanvas());
         this.texture.magFilter = THREE.NearestFilter;
@@ -59,3 +65,5 @@ class BlockClass {
 const Block = new BlockClass();
 
 export default Block;
+
+

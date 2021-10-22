@@ -37,8 +37,8 @@ export default function App() {
                 </div>
             </Debug> */}
             <div >
-                <canvas ref={imgCanvasRef} />
-                <CanvasElement
+                <canvas ref={imgCanvasRef} style={{zIndex:1}}/>
+                <CanvasElement style={{zIndex:0}}
                     ref={canvasRef}
                 />
             </div>
