@@ -14,7 +14,17 @@ const testMap = (world : World) => {
         BlockId.red_concrete, BlockId.black_concrete
     ]
 
-    blocks = blocks.concat(concretes);
+
+    const wools:BlockId[] = [
+        BlockId.white_wool, BlockId.orange_wool, BlockId.magenta_wool,
+        BlockId.light_blue_wool, BlockId.yellow_wool, BlockId.lime_wool,
+        BlockId.pink_wool, BlockId.gray_wool, BlockId.light_gray_wool,
+        BlockId.cyan_wool, BlockId.purple_wool, BlockId.blue_wool,
+        BlockId.blue_wool, BlockId.brown_wool, BlockId.green_wool,
+        BlockId.red_wool, BlockId.black_wool
+    ]
+
+    blocks = blocks.concat(concretes,wools);
     
     const s = Math.ceil(Math.sqrt(blocks.length) * 2);
 

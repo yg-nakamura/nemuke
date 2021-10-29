@@ -44,8 +44,8 @@ export class World {
     }
 
     public generateWorld() {
-        for (let x = 0; x < 12; x++) {
-            for (let z = 0; z < 12; z++) {
+        for (let x = -4; x < 4; x++) {
+            for (let z = -4; z < 4; z++) {
                 this.getChunk(x, z).generateChunk();
             }
         }

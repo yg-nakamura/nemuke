@@ -66,15 +66,22 @@ export class Chunk {
             }
         }
 
+        for(let g of geometries){
+            g.computeVertexNormals();
+        }
+
         const geometry = BufferGeometryUtils.mergeBufferGeometries( geometries );
         geometry.computeBoundingSphere();
 
-        const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( 
+        const mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( 
             { 
                 map: Block.getTexture(),
                 side: THREE.FrontSide,
                 alphaTest: 0.5,
             }));
+
+        // mesh.castShadow = true;
+        // mesh.receiveShadow = true;
 
         scene.add( mesh );
 

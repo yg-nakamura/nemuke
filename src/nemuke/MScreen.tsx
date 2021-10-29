@@ -19,6 +19,7 @@ export class MScreen {
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
+    light: THREE.DirectionalLight;
 
     mtexture : MTextureLoader;
 
@@ -35,7 +36,7 @@ export class MScreen {
         this.renderer = p.renderer;
         this.scene = p.scene;
         this.camera = p.camera;
-
+        this.light = p.light;
 
         this.enableAxesHelper();
         this.enableOrbitControls();
@@ -48,8 +49,8 @@ export class MScreen {
         testMap(world);
 
 
-        for (let x = 0; x < 1; x++) {
-            for (let z = 0; z < 1; z++) {
+        for (let x = -4; x < 4; x++) {
+            for (let z = -4 ; z < 4; z++) {
                 world.renderChunk(this.scene, x, z)
             }
         }
@@ -57,7 +58,9 @@ export class MScreen {
         update();
 
         function update() {
+            // console.log(p.camera.position);
             p.renderer.render(p.scene, p.camera);
+            p.light.position.set(p.camera.position.x,p.camera.position.y,p.camera.position.z)
             if(renderInfo){
                 renderInfo.innerHTML = JSON.stringify(p.renderer.info.render);
             }
@@ -65,16 +68,41 @@ export class MScreen {
         }
     }
 
-    private init(): { scene: THREE.Scene, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera } {
+    private init(): { scene: THREE.Scene, renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera , light : THREE.DirectionalLight} {
 
-        const renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
+        const renderer = new THREE.WebGLRenderer({ canvas: this.canvas});
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(this.width, this.height);
+        renderer.shadowMap.enabled = true;
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, this.width / this.height);
         camera.position.set(15, 15, 15);
         scene.background = new THREE.Color(0xbfd1e5);
-        return { scene: scene, renderer: renderer, camera: camera };
+
+
+
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff,1);
+
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048; 
+        directionalLight.shadow.mapSize.height= 2048; 
+
+        directionalLight.shadow.camera.right = 15;
+        directionalLight.shadow.camera.left = -15;
+        directionalLight.shadow.camera.top = 15;
+        directionalLight.shadow.camera.bottom = -15;
+        scene.add(directionalLight);
+        
+        scene.add(new THREE.AmbientLight(0xffffff,0.6));
+
+        // var directionalLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+        // scene.add( directionalLightShadowHelper);
+        // var directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+        // scene.add( directionalLightHelper);
+
+        return { scene: scene, renderer: renderer, camera: camera, light: directionalLight };
     }
 
     private enableAxesHelper() {

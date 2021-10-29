@@ -40,6 +40,7 @@ export class Face {
             geometry.rotateY(- Math.PI / 2);
             geometry.translate( -0.5, 0, 0 );
         }else if(this.type === FaceType.up){
+           
             geometry.rotateX(- Math.PI / 2);
             geometry.translate( 0, 0.5, 0 );
         }else if(this.type === FaceType.south){
