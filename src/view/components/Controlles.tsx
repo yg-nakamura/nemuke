@@ -6,6 +6,7 @@ width: 100vw;
 height: 100%;
 position: fixed;
 overflow: hidden;
+background-color: black;
 `;
 const Debug = styled.div`
 position: absolute;
@@ -20,11 +21,12 @@ opacity: 0.75;
 `;
 const CanvasElement = styled.canvas`
 position: absolute;
-top: 0;
-left: 0;
+top: 50%;
+left: 50%;
 z-index: -1;
-width: 100% !important;
-height: 100% !important;
+width:  90% !important;
+height: 95% !important;
+transform: translate(-50%,-50%);
 `;
 const Controll = styled.div`
 position: absolute;

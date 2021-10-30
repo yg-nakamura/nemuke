@@ -51,15 +51,17 @@ export class Chunk {
                     if (this.getBlock(x, y, z)) {
                         let block = Block.getBlockModelByID(this.getBlock(x, y, z));
                         
+                        // if(x % 2 != 0 || z % 2 != 0) continue;
+
                         block.pushGeometries( geometries,
                             { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
                             {
-                                east : x < 15 ? this.getBlock(x+1,y,z) : 0,
-                                west : x > 0 ? this.getBlock(x-1,y,z) : 0,
-                                up   : y < 255 ? this.getBlock(x,y+1,z) : 0,
-                                down : y > 0 ? this.getBlock(x,y-1,z) : 1,
-                                south: z < 15 ? this.getBlock(x,y,z+1) : 0,
-                                north: z > 0 ? this.getBlock(x,y,z-1) : 0,
+                                east : x < 15 ? this.getBlock(x+1,y,z) : BlockId.stone,
+                                west : x > 0 ? this.getBlock(x-1,y,z) : BlockId.stone,
+                                up   : y < 255 ? this.getBlock(x,y+1,z) : BlockId.stone,
+                                down : y > 0 ? this.getBlock(x,y-1,z) : BlockId.stone,
+                                south: z < 15 ? this.getBlock(x,y,z+1) : BlockId.stone,
+                                north: z > 0 ? this.getBlock(x,y,z-1) : BlockId.stone,
                             });
                     }
                 }
@@ -71,13 +73,24 @@ export class Chunk {
         }
 
         const geometry = BufferGeometryUtils.mergeBufferGeometries( geometries );
-        geometry.computeBoundingSphere();
+        // geometry.computeBoundingSphere();
 
         const mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( 
             { 
                 map: Block.getTexture(),
-                side: THREE.FrontSide,
+                side: THREE.DoubleSide,
                 alphaTest: 0.5,
+                depthTest : true,
+                // depthFunc : THREE.LessDepth
+                depthFunc : THREE.NeverDepth
+                // depthFunc : THREE.AlwaysDepth
+                // depthFunc : THREE.LessDepth
+                // depthFunc : THREE.LessEqualDepth
+                // depthFunc : THREE.EqualDepth
+                // depthFunc : THREE.GreaterEqualDepth
+                // depthFunc : THREE.GreaterDepth
+                // depthFunc : THREE.NotEqualDepth
+                
             }));
 
         // mesh.castShadow = true;

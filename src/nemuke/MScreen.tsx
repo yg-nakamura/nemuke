@@ -32,6 +32,8 @@ export class MScreen {
         this.canvas = mainCanvas;
         this.mtexture = mtexture;
 
+        Block.setMTexture(mtexture);
+
         this.width = mainCanvas.clientWidth;
         this.height = mainCanvas.clientHeight;
 
@@ -46,7 +48,9 @@ export class MScreen {
         var vignette = new ShaderPass(VignetteShader);
 
         console.log(vignette)
-        vignette.uniforms['darkness'].value = 1.5;
+        vignette.uniforms.darkness.value = 10;
+        vignette.uniforms.offset.value = 0;
+        // vignette.uniforms.tDiffuse.value = Block.getTexture();
 
         let composerRender = new RenderPass(this.scene, this.camera)
         composer.addPass(composerRender);
@@ -55,7 +59,6 @@ export class MScreen {
         this.enableAxesHelper();
         this.enableOrbitControls();
 
-        Block.setMTexture(mtexture);
 
         const world = new World()
 
@@ -89,12 +92,13 @@ export class MScreen {
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(this.width, this.height);
         renderer.shadowMap.enabled = true;
+        renderer.setPixelRatio( window.devicePixelRatio );
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, this.width / this.height);
         camera.position.set(15, 15, 15);
         scene.background = new THREE.Color(0xbfd1e5);
-        scene.fog = new THREE.Fog(0xbfd1e5, 50, 100);
+        // scene.fog = new THREE.Fog(0xbfd1e5, 50, 100);
 
 
 

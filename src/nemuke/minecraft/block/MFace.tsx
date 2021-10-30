@@ -59,6 +59,7 @@ export class Face {
         uvs[6] = faceInfo.uv[6]; uvs[7] = faceInfo.uv[7]; //画像の右下 -> (u : 1, v : 0) 
         let uvAttribute = new THREE.Float32BufferAttribute(uvs, 2 ).setUsage(THREE.StaticDrawUsage);
         geometry.setAttribute("uv",uvAttribute);
+
         this.geometry = geometry;
     }
 

@@ -41,6 +41,10 @@ class BlockClass {
         //Create Texture 
         this.texture = new THREE.CanvasTexture(mtexture.getCanvas());
         this.texture.magFilter = THREE.NearestFilter;
+        this.texture.minFilter = THREE.NearestFilter;
+        // this.texture.magFilter = THREE.NearestMipmapNearestFilter;
+        // this.texture.magFilter = THREE.NearestMipmapNearestFilter;
+
     }
 
     public getUVMap(name : string, uv? : number[]) : number[]{
