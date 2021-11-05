@@ -3203,6 +3203,27 @@
       },
       "yellow_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_yellow"
+      },
+
+      "terracotta" : {
+         "textures" : [
+            "textures/blocks/white_terracotta",
+            "textures/blocks/orange_terracotta",
+            "textures/blocks/magenta_terracotta",
+            "textures/blocks/wool_colored_light_blue",
+            "textures/blocks/wool_colored_yellow",
+            "textures/blocks/wool_colored_lime",
+            "textures/blocks/wool_colored_pink",
+            "textures/blocks/wool_colored_gray",
+            "textures/blocks/wool_colored_silver",
+            "textures/blocks/wool_colored_cyan",
+            "textures/blocks/wool_colored_purple",
+            "textures/blocks/blue_terracotta",
+            "textures/blocks/wool_colored_brown",
+            "textures/blocks/wool_colored_green",
+            "textures/blocks/wool_colored_red",
+            "textures/blocks/wool_colored_black"
+         ]
       }
    }
 }

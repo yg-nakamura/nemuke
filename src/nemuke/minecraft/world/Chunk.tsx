@@ -50,8 +50,6 @@ export class Chunk {
                 for (let z = 0; z < 16; z++) {
                     if (this.getBlock(x, y, z)) {
                         let block = Block.getBlockModelByID(this.getBlock(x, y, z));
-                        
-                        // if(x % 2 != 0 || z % 2 != 0) continue;
 
                         block.pushGeometries( geometries,
                             { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },

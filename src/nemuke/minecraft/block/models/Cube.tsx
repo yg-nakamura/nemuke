@@ -1,4 +1,4 @@
-import Block from "../Block";
+
 import { BlockModel } from "../BlockModel";
 import { FaceType } from "../MFace";
 

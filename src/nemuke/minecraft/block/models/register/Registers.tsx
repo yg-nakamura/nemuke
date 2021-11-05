@@ -3,15 +3,19 @@ import { BlockModel } from "../../BlockModel";
 import blockstate from "../../BlockState";
 import ModelId from "../../ModelId";
 import { BlackConcrete, BlueConcrete, BrownConcrete, CyanConcrete, GrayConcrete, GreenConcrete, LightBlueConcrete, LightGrayConcrete, LimeConcrete, MagentaConcrete, OrangeConcrete, PinkConcrete, PurpleConcrete, RedConcrete, WhiteConcrete, YellowConcrete } from "../parts/Concretes";
+import { BlackGrazedTerracotta, BlueGrazedTerracotta, BrownGrazedTerracotta, CyanGrazedTerracotta, GrayGrazedTerracotta, GreenGrazedTerracotta, LightBlueGrazedTerracotta, LightGrayGrazedTerracotta, LimeGrazedTerracotta, MagentaGrazedTerracotta, OrangeGrazedTerracotta, PinkGrazedTerracotta, PurpleGrazedTerracotta, RedGrazedTerracotta, WhiteGrazedTerracotta, YellowGrazedTerracotta } from "../parts/GlazedTerracottas";
 import { BlackWool, BlueWool, BrownWool, CyanWool, GrayWool, GreenWool, LightBlueWool, LightGrayWool, LimeWool, MagentaWool, OrangeWool, PinkWool, PurpleWool, RedWool, WhiteWool, YellowWool } from "../parts/Wools";
 
+const  registerBlocks = (models : { [key: number] : BlockModel}) => {
+    registerCubeAllBlocks(models);
+}
 
 function registerSingleState(models : { [key: number] : BlockModel}, bid : BlockId, mid : ModelId , model :BlockModel){
     models[mid] = model;
-    blockstate[bid] = {models : [{model : mid}]}
+    // blockstate[bid] = {models : [{model : mid}]}
 }
 
-const registerCubeAllBlocks = (models : { [key: number] : BlockModel}) => {
+function registerCubeAllBlocks(models : { [key: number] : BlockModel}) {
     registerSingleState(models, BlockId.white_concrete, ModelId.white_concrete, new WhiteConcrete());
     registerSingleState(models, BlockId.orange_concrete, ModelId.orange_concrete, new OrangeConcrete());
     registerSingleState(models, BlockId.magenta_concrete, ModelId.magenta_concrete, new MagentaConcrete());
@@ -46,6 +50,23 @@ const registerCubeAllBlocks = (models : { [key: number] : BlockModel}) => {
     registerSingleState(models, BlockId.red_wool, ModelId.red_wool, new RedWool());
     registerSingleState(models, BlockId.black_wool, ModelId.black_concrete, new BlackWool());    
 
+    registerSingleState(models, BlockId.white_glazed_terracotta, ModelId.white_glazed_terracotta, new WhiteGrazedTerracotta());
+    registerSingleState(models, BlockId.orange_glazed_terracotta, ModelId.orange_glazed_terracotta, new OrangeGrazedTerracotta());
+    registerSingleState(models, BlockId.magenta_glazed_terracotta, ModelId.magenta_glazed_terracotta, new MagentaGrazedTerracotta());
+    registerSingleState(models, BlockId.light_blue_glazed_terracotta, ModelId.light_blue_glazed_terracotta, new LightBlueGrazedTerracotta());
+    registerSingleState(models, BlockId.yellow_glazed_terracotta, ModelId.yellow_glazed_terracotta, new YellowGrazedTerracotta());
+    registerSingleState(models, BlockId.lime_glazed_terracotta, ModelId.lime_glazed_terracotta, new LimeGrazedTerracotta());
+    registerSingleState(models, BlockId.pink_glazed_terracotta, ModelId.pink_glazed_terracotta, new PinkGrazedTerracotta());
+    registerSingleState(models, BlockId.gray_glazed_terracotta, ModelId.gray_glazed_terracotta, new GrayGrazedTerracotta());
+    registerSingleState(models, BlockId.light_gray_glazed_terracotta, ModelId.light_gray_glazed_terracotta, new LightGrayGrazedTerracotta());
+    registerSingleState(models, BlockId.cyan_glazed_terracotta, ModelId.cyan_glazed_terracotta, new CyanGrazedTerracotta());
+    registerSingleState(models, BlockId.purple_glazed_terracotta, ModelId.purple_glazed_terracotta, new PurpleGrazedTerracotta());
+    registerSingleState(models, BlockId.blue_glazed_terracotta, ModelId.blue_glazed_terracotta, new BlueGrazedTerracotta());
+    registerSingleState(models, BlockId.brown_glazed_terracotta, ModelId.brown_glazed_terracotta, new BrownGrazedTerracotta());
+    registerSingleState(models, BlockId.green_glazed_terracotta, ModelId.green_glazed_terracotta, new GreenGrazedTerracotta());
+    registerSingleState(models, BlockId.red_glazed_terracotta, ModelId.red_glazed_terracotta, new RedGrazedTerracotta());
+    registerSingleState(models, BlockId.black_glazed_terracotta, ModelId.black_glazed_terracotta, new BlackGrazedTerracotta());    
+
 }
 
-export {registerCubeAllBlocks};
+export {registerBlocks};

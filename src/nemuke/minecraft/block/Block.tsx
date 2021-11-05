@@ -1,18 +1,18 @@
 import * as THREE from 'three';
-import BlockId from "./BlockId";
+import BlockId, { getBlockIdByName } from "./BlockId";
 import { BlockModel } from "./BlockModel";
-import blockstate from './BlockState';
+import blockstate, { BlockState } from './BlockState';
 import { Air } from './models/Air';
 import ModelId from './ModelId';
-import Stone from './models/Stone';
 import { MTextureLoader } from "./MTextureLoader";
-import { registerCubeAllBlocks } from './models/register/Registers';
+import BlockModelLoader from './ModelLoader';
+import {BlockStateLoader , JsonVariant} from './StateLoader';
+
 
 
 class BlockClass {
 
-    models: { [key: number] : BlockModel} = {};
-    blocks: { [key: number]: BlockModel } = {};
+    models: { [key: string] : BlockModel} = {};
     texture:THREE.Texture = new THREE.Texture();
     mtexture? : MTextureLoader;
 
@@ -30,8 +30,57 @@ class BlockClass {
 
     private registerBlockModel(){
         this.models[ModelId.air] = new Air();
-        this.models[ModelId.stone] = new Stone();
-        registerCubeAllBlocks(this.models);
+        
+        for(let modelKey in BlockModelLoader.jsonModels){
+            this.models[modelKey] = new BlockModel().fromJsonModel(BlockModelLoader.jsonModels[modelKey]);
+        }
+
+        for(let modelKey in BlockModelLoader.jsonModels){
+            this.models[modelKey] = new BlockModel().fromJsonModel(BlockModelLoader.jsonModels[modelKey]);
+        }
+        
+        for(let stateKey in BlockStateLoader.jsonStates){
+            const state = BlockStateLoader.jsonStates[stateKey];
+            const blockId = getBlockIdByName(stateKey);
+            if(state.variants){
+                for(let variantKey in state.variants){
+                    if(variantKey == ""){
+                        const variant = state.variants[variantKey];
+                        if(Array.isArray(variant)){
+                            const state  : BlockState = {
+                                id : blockId,
+                                models : []
+                            };
+
+                            for(let m of variant){
+                                state.models.push(
+                                    {
+                                        model : m.model.replace('minecraft:','')
+                                    }
+                                );
+                            }
+                            blockstate[blockId] = state;
+                        }else{
+                            const model = variant.model;
+                            blockstate[blockId] = {
+                                id : blockId,
+                                models : [
+                                    {model : model.replace('minecraft:','')}
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+
+        // this.models[ModelId.stone] = new BlockModel().fromJsonModel(BlockModelLoader.jsonModels["block/stone"]);
+        // blockstate[BlockId.stone] = {
+        //     models : [
+        //         {model : "block/stone"}
+        //     ]
+        // }
     }
 
 
@@ -42,8 +91,6 @@ class BlockClass {
         this.texture = new THREE.CanvasTexture(mtexture.getCanvas());
         this.texture.magFilter = THREE.NearestFilter;
         this.texture.minFilter = THREE.NearestFilter;
-        // this.texture.magFilter = THREE.NearestMipmapNearestFilter;
-        // this.texture.magFilter = THREE.NearestMipmapNearestFilter;
 
     }
 
