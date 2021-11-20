@@ -5,7 +5,7 @@ import { VignetteShader} from "three/examples/jsm/shaders/VignetteShader";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { MTextureLoader } from './minecraft/block/MTextureLoader';
+import { MTextureLoader } from './minecraft/block/trrein_texture/TrreinTextureLoader';
 import Block from './minecraft/block/Block';
 import BlockId from './minecraft/block/BlockId';
 import testMap from './minecraft/world/TestMap';
@@ -65,14 +65,20 @@ export class MScreen {
 
         testMap(world);
 
+        console.log("start chunk rendering...");
 
-        for (let x = -4; x < 4; x++) {
-            for (let z = -4 ; z < 4; z++) {
+        for (let x = -1; x < 8; x++) {
+            for (let z = -1 ; z < 8; z++) {
                 world.renderChunk(this.scene, x, z)
             }
         }
 
+        console.log("end chunk rendering...");
+        
+
         update();
+
+        
 
         function update() {
             // console.log(p.camera.position);

@@ -1,11 +1,11 @@
 
 import * as THREE from 'three';
-import Block from './Block';
-import BlockId from './BlockId';
+import Block from '../Block';
+import BlockId from '../BlockId';
 import { MElement } from './MElement';
 import { FaceType } from './MFace';
-import BlockModelLoader, { JsonElement, JsonModel } from './ModelLoader';
-import { Vec3 } from './Vec3';
+import BlockModelLoader, { JsonElement, JsonModel } from '../assets/loader/ModelLoader';
+import { Vec3 } from '../units/Vec3';
 
 type faceFlag = {
     down : boolean,
@@ -21,19 +21,30 @@ export class BlockModel {
 
     
     private elements: MElement[];
-    public isFullFace : faceFlag;
+
+    public isFullFace : faceFlag = {
+        down : false,
+        up : false,
+        north : false,
+        south : false,
+        west : false,
+        east : false
+    };
+    public isCullFace : faceFlag = {
+        down : false,
+        up : false,
+        north : false,
+        south : false,
+        west : false,
+        east : false
+    };
+
+    private isGlass = false;
+
     protected textures : {[key:string] : string} = {};
 
     constructor() {
         this.elements = [];
-        this.isFullFace = {
-            down : false,
-            up : false,
-            north : false,
-            south : false,
-            west : false,
-            east : false
-        }
     }
 
     public fromJsonModel(jsonModel : JsonModel) : BlockModel{
@@ -44,6 +55,10 @@ export class BlockModel {
                     this.textures["#" + texture_key] = this.textures[jsonModel.textures[texture_key]];
                 }else{
                     this.textures["#" + texture_key] = jsonModel.textures[texture_key].replace('minecraft:','');
+                    // if(jsonModel.textures[texture_key].includes('glass')){
+                    //     console.log(jsonModel);
+                    //     this.isGlass = true;
+                    // }
                 }
             }
         }
@@ -61,7 +76,7 @@ export class BlockModel {
                                     jsonElement.faces["down"].uv)}
                                     );
                                 if(jsonElement.faces["down"].cullface){
-                                    this.isFullFace.down = true;
+                                    this.isCullFace.down = true;
                                 }
                             }
 
@@ -73,7 +88,7 @@ export class BlockModel {
                                     jsonElement.faces["up"].uv)}
                                     );
                                 if(jsonElement.faces["up"].cullface){
-                                    this.isFullFace.up = true;
+                                    this.isCullFace.up = true;
                                 }
                             }
 
@@ -85,7 +100,7 @@ export class BlockModel {
                                     jsonElement.faces["north"].uv)}
                                     );
                                 if(jsonElement.faces["north"].cullface){
-                                    this.isFullFace.north = true;
+                                    this.isCullFace.north = true;
                                 }
                             }
 
@@ -97,7 +112,7 @@ export class BlockModel {
                                     jsonElement.faces["south"].uv)}
                                     );
                                 if(jsonElement.faces["south"].cullface){
-                                    this.isFullFace.south = true;
+                                    this.isCullFace.south = true;
                                 } 
                             }
 
@@ -109,7 +124,7 @@ export class BlockModel {
                                     jsonElement.faces["west"].uv)}
                                     );
                                 if(jsonElement.faces["west"].cullface){
-                                    this.isFullFace.west = true;
+                                    this.isCullFace.west = true;
                                 } 
                             }
 
@@ -121,7 +136,7 @@ export class BlockModel {
                                     jsonElement.faces["east"].uv)}
                                     );
                                 if(jsonElement.faces["east"].cullface){
-                                    this.isFullFace.east = true;
+                                    this.isCullFace.east = true;
                                 } 
                             }
                             break;
@@ -139,19 +154,38 @@ export class BlockModel {
         return this;
     }
 
-    protected createElementFromJson(jsonElement : JsonElement){
-        
-    }
-
-    protected createElement(from: Vec3, to: Vec3): MElement {
+    public createElement(from: Vec3, to: Vec3): MElement {
         return new MElement(from, to);
     }
 
-    protected pushElement(element: MElement) {
+    public pushElement(element: MElement) {
+        if(!this.isGlass){
+            for(let f in element.faces){
+                switch(f){
+                    case FaceType.down:
+                        this.isFullFace.down = element.from.x == 0 && element.from.z == 0 && element.to.x == 16 && element.to.z == 16;
+                        break;
+                    case FaceType.up:
+                        this.isFullFace.up = element.from.x == 0 && element.from.z == 0 && element.to.x == 16 && element.to.z == 16;
+                        break;
+                    case FaceType.north:
+                        this.isFullFace.north = element.from.x == 0 && element.from.y == 0 && element.to.x == 16 && element.to.y == 16;
+                        break;
+                    case FaceType.south:
+                        this.isFullFace.south = element.from.x == 0 && element.from.y == 0 && element.to.x == 16 && element.to.y == 16;
+                        break;
+                    case FaceType.west:
+                        this.isFullFace.west = element.from.z == 0 && element.from.y == 0 && element.to.z == 16 && element.to.y == 16;
+                        break;
+                    case FaceType.east:
+                        this.isFullFace.east = element.from.z == 0 && element.from.y == 0 && element.to.z == 16 && element.to.y == 16;
+                        break;
+                }
+            }
+        }
+
         this.elements.push(element);
     }
-
-
 
     public pushGeometries(geometries : THREE.BufferGeometry[],pos: Vec3,adjBlocks : {east? : BlockId, west? : BlockId, up? : BlockId, down? : BlockId, south? : BlockId, north? : BlockId}){
         let flag : faceFlag = {
@@ -204,9 +238,69 @@ export class BlockModel {
         }
     }
 
-    protected getUV(path : string) : number[]{
+    public getUV(path : string) : number[]{
         return Block.getUVMap(path);
     }
+
+    public rotateY() : BlockModel{
+        const model = new BlockModel();
+        for (let element of this.elements) {
+            const from = {x : element.from.z , z : 16 - element.to.x , y : element.from.y};
+            const to = {x : element.to.z, z : 16 - element.from.x, y : element.to.y};
+            const newelement = model.createElement(from, to);
+            if(element.faces[FaceType.east]){
+                newelement.createFace(FaceType.north,element.faces[FaceType.east].faceInfo);
+            }
+            if(element.faces[FaceType.north]){
+                newelement.createFace(FaceType.west,element.faces[FaceType.north].faceInfo);
+            }
+            if(element.faces[FaceType.west]){
+                newelement.createFace(FaceType.south,element.faces[FaceType.west].faceInfo);
+            }
+            if(element.faces[FaceType.south]){
+                newelement.createFace(FaceType.east,element.faces[FaceType.south].faceInfo);
+            }
+            if(element.faces[FaceType.up]){
+                newelement.createFace(FaceType.up,element.faces[FaceType.up].faceInfo);
+            }
+            if(element.faces[FaceType.down]){
+                newelement.createFace(FaceType.down,element.faces[FaceType.down].faceInfo);
+            }
+            model.pushElement(newelement);
+        }
+        return model;
+    }
+
+    public rotateX() : BlockModel{
+        const model = new BlockModel();
+        for (let element of this.elements) {
+            const from = {x : element.from.z , z : 16 - element.to.x , y : element.from.y};
+            const to = {x : element.to.z, z : 16 - element.from.x, y : element.to.y};
+            const newelement = model.createElement(from, to);
+            if(element.faces[FaceType.east]){
+                newelement.createFace(FaceType.down,element.faces[FaceType.east].faceInfo);
+            }
+            if(element.faces[FaceType.north]){
+                newelement.createFace(FaceType.north,element.faces[FaceType.north].faceInfo);
+            }
+            if(element.faces[FaceType.west]){
+                newelement.createFace(FaceType.up,element.faces[FaceType.west].faceInfo);
+            }
+            if(element.faces[FaceType.south]){
+                newelement.createFace(FaceType.south,element.faces[FaceType.south].faceInfo);
+            }
+            if(element.faces[FaceType.up]){
+                newelement.createFace(FaceType.east,element.faces[FaceType.up].faceInfo);
+            }
+            if(element.faces[FaceType.down]){
+                newelement.createFace(FaceType.west,element.faces[FaceType.down].faceInfo);
+            }
+            model.pushElement(newelement);
+        }
+        return model;
+    }
+
+
 }
 
 

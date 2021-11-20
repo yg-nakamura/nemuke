@@ -1,4 +1,4 @@
-import BlockModelLoader from "./ModelLoader";
+
 import textures from "./texture.json"
 
 type MTexture = {
@@ -122,15 +122,18 @@ export class MTextureLoader{
 
     public getUVMap(name : string, uv : number[]) : number[]{
         const texture = this.textures[name];
+
         if(texture){
-            const t = 16 - uv[1];
-            uv[1] = 16 - uv[3];
-            uv[3] = t;
+            
+            const oy = (((16-uv[3])/16)*texture.height) / this.canvas.height;
+
+            const ty = ((uv[3]-uv[1])/16)  * texture.height;
+
             const offsetx = (texture.offset + (uv[0]/16) * texture.width) / this.canvas.width;
             const width = texture.width / this.canvas.width * ((uv[2]-uv[0])/16);
-            const height = texture.height / this.canvas.height * ((uv[3]-uv[1])/16) ;
-            const offsety = ((this.canvas.height - texture.height) + (uv[1]/16)*texture.height) / this.canvas.height; 
-    
+            const height =  ty / this.canvas.height;
+            const offsety = (this.canvas.height - texture.height) / this.canvas.height + oy; 
+
             return [
                 offsetx            ,offsety + height,
                 offsetx + width    ,offsety + height,

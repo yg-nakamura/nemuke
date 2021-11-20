@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 import BlockId, { getBlockIdByName } from "./BlockId";
-import { BlockModel } from "./BlockModel";
-import blockstate, { BlockState } from './BlockState';
-import { Air } from './models/Air';
-import ModelId from './ModelId';
-import { MTextureLoader } from "./MTextureLoader";
-import BlockModelLoader from './ModelLoader';
-import {BlockStateLoader , JsonVariant} from './StateLoader';
+import { BlockModel } from "./block_model/BlockModel";
+import { MTextureLoader } from "./trrein_texture/TrreinTextureLoader";
+import BlockModelLoader from './assets/loader/ModelLoader';
+import {BlockStateLoader , JsonVariant} from './assets/loader/StateLoader';
+import {  getVariantsInstance } from './variants/BlockVariants';
+import { BlockModelProp, Variants } from './variants/Variants';
 
 
 
@@ -15,25 +14,42 @@ class BlockClass {
     models: { [key: string] : BlockModel} = {};
     texture:THREE.Texture = new THREE.Texture();
     mtexture? : MTextureLoader;
+    variantsMap : { [key: number] : Variants} = {};
 
-
-    public getBlockModelByID(id?: BlockId) {
-        if(id && blockstate[id]){
-            return this.getBlockModelByIdAndData(id,0);
+    public getVariantsMap() : { [key: number] : Variants}{
+        return this.variantsMap;
+    }
+    public getBlockModelByID(id?: BlockId, data? : number) : BlockModel{
+        if(id && this.variantsMap[id]){
+            return this.variantsMap[id].getModel(data ? data : 0);
         }
-        return this.models[ModelId.air];
+        return this.models["block/air"];
     }
 
-    public getBlockModelByIdAndData(id: BlockId, data: number) {
-        return this.models[blockstate[id].models[data].model];
+    public getBlockModelNum(id?: BlockId) : number{
+        if(id && this.variantsMap[id]){
+            return this.variantsMap[id].getKeys().length;
+        }
+        return 1;
+    }
+
+
+    private getBlockModel(name : string, rotate : {y : number | undefined, x : number | undefined}) : BlockModel{
+        let m = this.models[name];
+        if(rotate.y){
+            for(let i = 0; i < (rotate.y/90); i++){
+                m = m.rotateY();
+            }
+        }
+        if(rotate.x){
+            for(let i = 0; i < (rotate.x/90); i++){
+                m = m.rotateX();
+            }
+        }
+        return m;
     }
 
     private registerBlockModel(){
-        this.models[ModelId.air] = new Air();
-        
-        for(let modelKey in BlockModelLoader.jsonModels){
-            this.models[modelKey] = new BlockModel().fromJsonModel(BlockModelLoader.jsonModels[modelKey]);
-        }
 
         for(let modelKey in BlockModelLoader.jsonModels){
             this.models[modelKey] = new BlockModel().fromJsonModel(BlockModelLoader.jsonModels[modelKey]);
@@ -43,57 +59,42 @@ class BlockClass {
             const state = BlockStateLoader.jsonStates[stateKey];
             const blockId = getBlockIdByName(stateKey);
             if(state.variants){
+                const models : {[key:string] : BlockModelProp} = {};
+
                 for(let variantKey in state.variants){
-                    if(variantKey == ""){
                         const variant = state.variants[variantKey];
                         if(Array.isArray(variant)){
-                            const state  : BlockState = {
-                                id : blockId,
-                                models : []
-                            };
-
                             for(let m of variant){
-                                state.models.push(
-                                    {
-                                        model : m.model.replace('minecraft:','')
+                                models[variantKey] = {
+                                        model : this.getBlockModel(m.model.replace('minecraft:','') , {y : m.y , x : m.x})
                                     }
-                                );
-                            }
-                            blockstate[blockId] = state;
+　　                         }                        
                         }else{
                             const model = variant.model;
-                            blockstate[blockId] = {
-                                id : blockId,
-                                models : [
-                                    {model : model.replace('minecraft:','')}
-                                ]
-                            }
+                            
+                            models[variantKey] = {model : this.getBlockModel(model.replace('minecraft:',''), {y : variant.y, x : variant.x})}
                         }
-                    }
                 }
+                this.variantsMap[blockId] = getVariantsInstance(blockId, models);
             }
             
         }
-
-        // this.models[ModelId.stone] = new BlockModel().fromJsonModel(BlockModelLoader.jsonModels["block/stone"]);
-        // blockstate[BlockId.stone] = {
-        //     models : [
-        //         {model : "block/stone"}
-        //     ]
-        // }
+        console.log("Block models is loaded");
     }
 
 
     public setMTexture(mtexture : MTextureLoader){
         this.mtexture = mtexture;
         this.registerBlockModel();
-        //Create Texture 
         this.texture = new THREE.CanvasTexture(mtexture.getCanvas());
         this.texture.magFilter = THREE.NearestFilter;
         this.texture.minFilter = THREE.NearestFilter;
 
     }
-
+    public getTexture(){
+        return this.texture;
+    }
+    
     public getUVMap(name : string, uv? : number[]) : number[]{
         if(this.mtexture){
             if(uv){
@@ -108,9 +109,7 @@ class BlockClass {
         return [0,0,0,0,0,0,0,0];
     }
 
-    public getTexture(){
-        return this.texture;
-    }
+
 }
 
 const Block = new BlockClass();

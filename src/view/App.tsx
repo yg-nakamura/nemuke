@@ -1,5 +1,5 @@
 import React, {  useEffect } from "react";
-import { MTextureLoader } from "../nemuke/minecraft/block/MTextureLoader";
+import { MTextureLoader } from "../nemuke/minecraft/block/trrein_texture/TrreinTextureLoader";
 import { MScreen } from "../nemuke/MScreen";
 import {CanvasElement,  Parent} from "./components/Controlles"
 

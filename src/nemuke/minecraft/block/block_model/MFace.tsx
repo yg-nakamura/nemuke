@@ -25,32 +25,20 @@ export class Face {
     constructor(type: FaceType, faceInfo: FaceInfo) {
         this.type = type;
         this.faceInfo = faceInfo;
-        // const loader = new THREE.TextureLoader()
-        // const texture = loader.load(faceInfo.folder + faceInfo.texture);
-        // texture.magFilter = THREE.NearestFilter;
-        // this.material = new THREE.MeshBasicMaterial({
-        //     map: texture
-        // });
 
         let geometry = new THREE.PlaneGeometry(1,1);
         if(this.type === FaceType.east){
             geometry.rotateY(Math.PI / 2);
-            geometry.translate( 0.5, 0, 0 );
         }else if(this.type === FaceType.west){
             geometry.rotateY(- Math.PI / 2);
-            geometry.translate( -0.5, 0, 0 );
         }else if(this.type === FaceType.up){
-           
             geometry.rotateX(- Math.PI / 2);
-            geometry.translate( 0, 0.5, 0 );
         }else if(this.type === FaceType.south){
-            geometry.translate( 0, 0, 0.5 );
+
         }else if(this.type === FaceType.north){
             geometry.rotateY( Math.PI );
-            geometry.translate( 0, 0, -0.5 );
         }else if(this.type === FaceType.down){
             geometry.rotateX( Math.PI / 2);
-            geometry.translate( 0, -0.5, 0 );
         }
         let uvs = new Float32Array(8);
         uvs[0] = faceInfo.uv[0]; uvs[1] = faceInfo.uv[1]; //画像の左上 -> (u : 0, v : 1)
@@ -63,9 +51,6 @@ export class Face {
         this.geometry = geometry;
     }
 
-    // public getFacesMaterial(): THREE.MeshBasicMaterial {
-    //     return this.material;
-    // }
 
     public getPlaneGeometry() : THREE.PlaneGeometry{
        return this.geometry;

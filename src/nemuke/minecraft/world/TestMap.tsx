@@ -1,13 +1,18 @@
+import Block from "../block/Block";
 import BlockId, { getBlockIdByName } from "../block/BlockId";
-import blockstate from "../block/BlockState";
 import { World } from "./World";
 
 
+
 const testMap = (world : World) => {
-    let blocks:BlockId[] = [];
+    let blocks:{id : BlockId, data : number}[] = [];
     
-    for(let t in blockstate){
-        blocks.push(blockstate[t].id);
+    const map = Block.getVariantsMap();
+    for(let t in map){
+        for(let j = 0; j < Block.getBlockModelNum(map[t].getId()); j++){
+            blocks.push({id : map[t].getId(), data: j});
+        }
+        
     }
 
     const s = Math.ceil(Math.sqrt(blocks.length) * 2);
@@ -16,7 +21,9 @@ const testMap = (world : World) => {
     for(let x = 0; x < s; x++){
         for(let z = 0; z < s; z++){
             if(x % 2 == 0 && z % 2 == 0 && i < blocks.length){
-                world.setBlock(x, 4, z, blocks[i++]);
+                const iddata = blocks[i++];
+                world.setBlock(x, 5, z,iddata.id , iddata.data);
+                
             }
         }
     }

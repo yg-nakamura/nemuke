@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Vec3 } from "./Vec3";
+import { Vec3 } from "../units/Vec3";
 import { Face, FaceInfo, FaceType } from './MFace';
 
 type faceFlag = {
@@ -23,6 +23,7 @@ export class MElement {
         this.to = to;
         this.geometry = new THREE.BoxGeometry((to.x - from.x) / 16, (to.y - from.y) / 16, (to.z - from.z) / 16);
     }
+
 
     public createFace(type: FaceType, faceInfo: FaceInfo) {
         const face = new Face(type, faceInfo);

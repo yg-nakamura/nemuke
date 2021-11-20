@@ -2,10 +2,12 @@ import * as THREE from 'three';
 import Block from "../block/Block";
 import BlockId from "../block/BlockId";
 import * as  BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils"
+import { World } from './World';
 
 export class Chunk {
 
     blockIdMap: BlockId[] = [];
+    blockDataMap: number[] = [];
     chunkX: number;
     chunkZ: number;
 
@@ -29,7 +31,22 @@ export class Chunk {
 
     }
 
-    public setBlock(x: number, y: number, z: number, id: BlockId) {
+    public getBlockData(x: number, y: number, z: number): number {
+        let px = x & 15;
+        let pz = z & 15;
+        let py = y;
+
+        let sp = (py << 8) + (px << 4) + pz
+
+        if (this.blockDataMap[sp]) {
+            return this.blockDataMap[sp]
+        } else {
+            return 0
+        }
+
+    }
+
+    public setBlock(x: number, y: number, z: number, id: BlockId, data: number) {
         let px = x & 15;
         let pz = z & 15;
         let py = y;
@@ -38,34 +55,38 @@ export class Chunk {
 
         if(id !== BlockId.air){
             this.blockIdMap[sp] = id;
+            this.blockDataMap[sp] = data;
         }
     }
 
-    public render(scene: THREE.Scene) {
-        // ジオメトリーのリスト
+    public render(scene: THREE.Scene, world : World) {
+
         let geometries : THREE.BufferGeometry[] = [];
 
         for (let y = 0; y < 256; y++) {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (this.getBlock(x, y, z)) {
-                        let block = Block.getBlockModelByID(this.getBlock(x, y, z));
-
+                        let block = Block.getBlockModelByID(this.getBlock(x, y, z), this.getBlockData(x,y,z));
+                        const px = this.chunkX * 16 + x;
+                        const pz =  this.chunkZ * 16 + z;
                         block.pushGeometries( geometries,
-                            { x: this.chunkX * 16 + x, y: y, z: this.chunkZ * 16 + z },
+                            { x: px, y: y, z: pz},
                             {
-                                east : x < 15 ? this.getBlock(x+1,y,z) : BlockId.stone,
-                                west : x > 0 ? this.getBlock(x-1,y,z) : BlockId.stone,
-                                up   : y < 255 ? this.getBlock(x,y+1,z) : BlockId.stone,
-                                down : y > 0 ? this.getBlock(x,y-1,z) : BlockId.stone,
-                                south: z < 15 ? this.getBlock(x,y,z+1) : BlockId.stone,
-                                north: z > 0 ? this.getBlock(x,y,z-1) : BlockId.stone,
+                                east : this.getBlock(px+1,y,pz),
+                                west : this.getBlock(px-1,y,pz),
+                                up   : this.getBlock(px,y+1,pz),
+                                down : this.getBlock(px,y-1,pz),
+                                south: this.getBlock(px,y,pz+1),
+                                north: this.getBlock(px,y,pz-1),
                             });
                     }
                 }
             }
         }
 
+        if(geometries.length == 0) return;
+        
         for(let g of geometries){
             g.computeVertexNormals();
         }
@@ -78,17 +99,7 @@ export class Chunk {
                 map: Block.getTexture(),
                 side: THREE.DoubleSide,
                 alphaTest: 0.5,
-                depthTest : true,
-                // depthFunc : THREE.LessDepth
-                depthFunc : THREE.NeverDepth
-                // depthFunc : THREE.AlwaysDepth
-                // depthFunc : THREE.LessDepth
-                // depthFunc : THREE.LessEqualDepth
-                // depthFunc : THREE.EqualDepth
-                // depthFunc : THREE.GreaterEqualDepth
-                // depthFunc : THREE.GreaterDepth
-                // depthFunc : THREE.NotEqualDepth
-                
+                depthTest : true,                
             }));
 
         // mesh.castShadow = true;
@@ -103,9 +114,9 @@ export class Chunk {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (y === 3) {
-                        this.setBlock(x, y, z, BlockId.stone);
+                        this.setBlock(x, y, z, BlockId.stone, 0);
                     }else {
-                        this.setBlock(x, y, z, BlockId.air);
+                        this.setBlock(x, y, z, BlockId.air, 0);
                     }
                 }
             }
