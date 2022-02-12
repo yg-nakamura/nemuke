@@ -6,6 +6,7 @@ import BlockModelLoader from './assets/loader/ModelLoader';
 import {BlockStateLoader , JsonVariant} from './assets/loader/StateLoader';
 import {  getVariantsInstance } from './variants/BlockVariants';
 import { BlockModelProp, Variants } from './variants/Variants';
+import { Vec3 } from './units/Vec3';
 
 
 
@@ -21,9 +22,23 @@ class BlockClass {
     }
     public getBlockModelByID(id?: BlockId, data? : number) : BlockModel{
         if(id && this.variantsMap[id]){
-            return this.variantsMap[id].getModel(data ? data : 0);
+            return this.variantsMap[id].getFirstModel();
         }
         return this.models["block/air"];
+    }
+    public getBlockGeometriesByID(id: BlockId, geometries : THREE.BufferGeometry[],pos : Vec3,data : number,
+        adjBlocks : {
+            east : {id : BlockId, damage : number},
+            west : {id : BlockId, damage : number},
+            up : {id : BlockId, damage : number},
+            down : {id : BlockId, damage : number},
+            south : {id : BlockId, damage : number},
+            north : {id : BlockId, damage : number},
+        }) : void{
+
+        if(this.variantsMap[id]){
+            this.variantsMap[id].pushGeometries(geometries,pos,data,adjBlocks,[]);
+        }
     }
 
     public getBlockModelNum(id?: BlockId) : number{
@@ -36,14 +51,17 @@ class BlockClass {
 
     private getBlockModel(name : string, rotate : {y : number | undefined, x : number | undefined}) : BlockModel{
         let m = this.models[name];
-        if(rotate.y){
-            for(let i = 0; i < (rotate.y/90); i++){
-                m = m.rotateY();
-            }
+        if(name == "block/lever"){
+            console.log(rotate);
         }
         if(rotate.x){
             for(let i = 0; i < (rotate.x/90); i++){
                 m = m.rotateX();
+            }
+        }
+        if(rotate.y){
+            for(let i = 0; i < (rotate.y/90); i++){
+                m = m.rotateY();
             }
         }
         return m;
@@ -95,18 +113,38 @@ class BlockClass {
         return this.texture;
     }
     
-    public getUVMap(name : string, uv? : number[]) : number[]{
+    public getUVMap(name : string, rotate : number, uv? : number[]) : number[]{
+        let ruv = [0,0,0,0,0,0,0,0];
         if(this.mtexture){
             if(uv){
-                return this.mtexture.getUVMap(name,uv);
+                ruv =  this.mtexture.getUVMap(name,uv);
             }else{
-                return this.mtexture.getUVMap(name,[
+                ruv= this.mtexture.getUVMap(name,[
                     0, 0,
                     16, 16
                 ]);
             }
         }
-        return [0,0,0,0,0,0,0,0];
+        let ruv2 = ruv.concat();
+        if(rotate){
+
+        }
+        for(let i = 0; i < rotate; i++){
+            ruv2[0] = ruv[2];
+            ruv2[1] = ruv[3];
+
+            ruv2[2] = ruv[6];
+            ruv2[3] = ruv[7];
+            
+            ruv2[4] = ruv[0];
+            ruv2[5] = ruv[1];
+            
+            ruv2[6] = ruv[4];
+            ruv2[7] = ruv[5];
+            ruv = ruv2.concat();
+        }
+
+        return ruv2;
     }
 
 

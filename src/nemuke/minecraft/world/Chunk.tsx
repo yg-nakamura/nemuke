@@ -67,19 +67,18 @@ export class Chunk {
             for (let x = 0; x < 16; x++) {
                 for (let z = 0; z < 16; z++) {
                     if (this.getBlock(x, y, z)) {
-                        let block = Block.getBlockModelByID(this.getBlock(x, y, z), this.getBlockData(x,y,z));
                         const px = this.chunkX * 16 + x;
                         const pz =  this.chunkZ * 16 + z;
-                        block.pushGeometries( geometries,
-                            { x: px, y: y, z: pz},
-                            {
-                                east : this.getBlock(px+1,y,pz),
-                                west : this.getBlock(px-1,y,pz),
-                                up   : this.getBlock(px,y+1,pz),
-                                down : this.getBlock(px,y-1,pz),
-                                south: this.getBlock(px,y,pz+1),
-                                north: this.getBlock(px,y,pz-1),
-                            });
+                        Block.getBlockGeometriesByID(this.getBlock(x, y, z), geometries,{ x: px, y: y, z: pz}, this.getBlockData(x,y,z),
+                        {
+                            east : {id : this.getBlock(px+1,y,pz),damage : this.getBlockData(px+1,y,pz)},
+                            west : {id : this.getBlock(px-1,y,pz),damage : this.getBlockData(px-1,y,pz)},
+                            up   : {id : this.getBlock(px,y+1,pz),damage : this.getBlockData(px,y+1,pz)},
+                            down : {id : this.getBlock(px,y-1,pz),damage : this.getBlockData(px,y-1,pz)},
+                            south: {id : this.getBlock(px,y,pz+1),damage : this.getBlockData(px,y,pz+1)},
+                            north: {id : this.getBlock(px,y,pz-1),damage : this.getBlockData(px,y,pz-1)},
+                        }
+                        );
                     }
                 }
             }
@@ -104,7 +103,8 @@ export class Chunk {
 
         // mesh.castShadow = true;
         // mesh.receiveShadow = true;
-
+        const box = new THREE.BoxHelper( mesh, 0xffff00 );
+        scene.add( box );
         scene.add( mesh );
 
     }

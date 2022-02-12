@@ -20,7 +20,7 @@ export class Face {
     type: FaceType;
     faceInfo: FaceInfo;
     // material: THREE.MeshBasicMaterial;
-    geometry : THREE.PlaneGeometry;
+    geometry : THREE.BufferGeometry;
 
     constructor(type: FaceType, faceInfo: FaceInfo) {
         this.type = type;
@@ -45,6 +45,10 @@ export class Face {
         uvs[2] = faceInfo.uv[2]; uvs[3] = faceInfo.uv[3]; //画像の右上 -> (u : 1, v : 1) 
         uvs[4] = faceInfo.uv[4]; uvs[5] = faceInfo.uv[5]; //画像の左下 -> (u : 0, v : 0)
         uvs[6] = faceInfo.uv[6]; uvs[7] = faceInfo.uv[7]; //画像の右下 -> (u : 1, v : 0) 
+        // uvs[0] = faceInfo.uv[4]; uvs[1] = faceInfo.uv[5]; //画像の左上 -> (u : 0, v : 1)
+        // uvs[2] = faceInfo.uv[6]; uvs[3] = faceInfo.uv[7]; //画像の右上 -> (u : 1, v : 1) 
+        // uvs[4] = faceInfo.uv[0]; uvs[5] = faceInfo.uv[1]; //画像の左下 -> (u : 0, v : 0)
+        // uvs[6] = faceInfo.uv[2]; uvs[7] = faceInfo.uv[3]; //画像の右下 -> (u : 1, v : 0) 
         let uvAttribute = new THREE.Float32BufferAttribute(uvs, 2 ).setUsage(THREE.StaticDrawUsage);
         geometry.setAttribute("uv",uvAttribute);
 
@@ -52,9 +56,14 @@ export class Face {
     }
 
 
-    public getPlaneGeometry() : THREE.PlaneGeometry{
+    public getGeometry() : THREE.BufferGeometry{
        return this.geometry;
     }
+
+    public setGeometry(geometry : THREE.BufferGeometry){
+        this.geometry = geometry;
+    }
+
 
 }
 

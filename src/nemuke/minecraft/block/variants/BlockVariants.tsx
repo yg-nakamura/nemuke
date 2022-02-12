@@ -1,6 +1,6 @@
 import BlockId from "../BlockId"
+import { Anvil, Bone, Button, Cocoa, Dispenser, Door, EndPortalFrame, FanceGate, FurnaceBurning, Lever, Pumpkin, Rail, Stairs, TerracottaGlaze, Torch, Trapdoor } from "./Faceable";
 import { BlockModelProp, Variants } from "./Variants";
-import VariantsDoor from "./VariantsDoor";
 
 
 
@@ -16,7 +16,7 @@ export function getVariantsInstance(id : BlockId, models : {[key:string] : Block
         case BlockId.jungle_door:
         case BlockId.spruce_door:
         case BlockId.warped_door:
-            return new VariantsDoor(id,models);
+            return new Door(id, models);
 
         case BlockId.acacia_fence_gate:
         case BlockId.birch_fence_gate:        
@@ -26,34 +26,35 @@ export function getVariantsInstance(id : BlockId, models : {[key:string] : Block
         case BlockId.jungle_fence_gate:
         case BlockId.spruce_fence_gate:
         case BlockId.warped_fence_gate:
+            return new FanceGate(id, models);
 
+        // case BlockId.acacia_log:        
+        // case BlockId.dark_oak_log:
+        // case BlockId.birch_log:
+        // case BlockId.jungle_log:
+        // case BlockId.spruce_log:
+        // case BlockId.stripped_acacia_log:
+        // case BlockId.stripped_birch_log:
+        // case BlockId.stripped_dark_oak_log:
+        // case BlockId.stripped_jungle_log:
+        // case BlockId.stripped_oak_log:
+        // case BlockId.stripped_spruce_log:
+        // case BlockId.oak_log:
+       
 
-        case BlockId.acacia_log:        
-        case BlockId.dark_oak_log:
-        case BlockId.birch_log:
-        case BlockId.jungle_log:
-        case BlockId.spruce_log:
-        case BlockId.stripped_acacia_log:
-        case BlockId.stripped_birch_log:
-        case BlockId.stripped_dark_oak_log:
-        case BlockId.stripped_jungle_log:
-        case BlockId.stripped_oak_log:
-        case BlockId.stripped_spruce_log:
-        case BlockId.oak_log:
+        // case BlockId.birch_pressure_plate:
+        // case BlockId.crimson_pressure_plate:
+        // case BlockId.dark_oak_pressure_plate:
+        // case BlockId.light_weighted_pressure_plate:
+        // case BlockId.oak_pressure_plate:
+        // case BlockId.heavy_weighted_pressure_plate:
+        // case BlockId.jungle_pressure_plate:
+        // case BlockId.polished_blackstone_pressure_plate:
+        // case BlockId.spruce_pressure_plate:
+        // case BlockId.stone_pressure_plate:
+        // case BlockId.warped_pressure_plate:
+        // case BlockId.acacia_pressure_plate:
 
-
-        case BlockId.birch_pressure_plate:
-        case BlockId.crimson_pressure_plate:
-        case BlockId.dark_oak_pressure_plate:
-        case BlockId.light_weighted_pressure_plate:
-        case BlockId.oak_pressure_plate:
-        case BlockId.heavy_weighted_pressure_plate:
-        case BlockId.jungle_pressure_plate:
-        case BlockId.polished_blackstone_pressure_plate:
-        case BlockId.spruce_pressure_plate:
-        case BlockId.stone_pressure_plate:
-        case BlockId.warped_pressure_plate:
-        case BlockId.acacia_pressure_plate:
 
         case BlockId.black_glazed_terracotta:
         case BlockId.cyan_glazed_terracotta:        
@@ -71,48 +72,51 @@ export function getVariantsInstance(id : BlockId, models : {[key:string] : Block
         case BlockId.yellow_glazed_terracotta:
         case BlockId.white_glazed_terracotta:
         case BlockId.brown_glazed_terracotta:
+            return new TerracottaGlaze(id, models);
 
-        case BlockId.brick_slab:
-        case BlockId.blackstone_slab:
-        case BlockId.dark_prismarine_slab:
-        case BlockId.acacia_slab:
-        case BlockId.andesite_slab:
-        case BlockId.cobblestone_slab:
-        case BlockId.crimson_slab:
-        case BlockId.cut_red_sandstone_slab:
-        case BlockId.dark_oak_slab:
-        case BlockId.cut_sandstone_slab:
-        case BlockId.diorite_slab:
-        case BlockId.birch_slab:        
-        case BlockId.granite_slab:
-        case BlockId.mossy_stone_brick_slab:
-        case BlockId.nether_brick_slab:
-        case BlockId.oak_slab:
-        case BlockId.end_stone_brick_slab:
-        case BlockId.jungle_slab:
-        case BlockId.mossy_cobblestone_slab:
-        case BlockId.polished_blackstone_slab:
-        case BlockId.polished_diorite_slab:
-        case BlockId.red_sandstone_slab:
-        case BlockId.polished_granite_slab:
-        case BlockId.purpur_slab:
-        case BlockId.polished_granite_slab:
-        case BlockId.petrified_oak_slab:        
-        case BlockId.smooth_red_sandstone_slab:
-        case BlockId.spruce_slab:
-        case BlockId.smooth_quartz_slab:        
-        case BlockId.polished_andesite_slab:
-        case BlockId.prismarine_brick_slab:
-        case BlockId.quartz_slab:
-        case BlockId.smooth_stone_slab:
-        case BlockId.smooth_sandstone_slab:
-        case BlockId.sandstone_slab:
-        case BlockId.prismarine_slab:        
-        case BlockId.polished_blackstone_brick_slab:
-        case BlockId.red_nether_brick_slab:
-        case BlockId.warped_slab:
-        case BlockId.stone_brick_slab:
-        case BlockId.stone_slab:
+
+        // case BlockId.brick_slab:
+        // case BlockId.blackstone_slab:
+        // case BlockId.dark_prismarine_slab:
+        // case BlockId.acacia_slab:
+        // case BlockId.andesite_slab:
+        // case BlockId.cobblestone_slab:
+        // case BlockId.crimson_slab:
+        // case BlockId.cut_red_sandstone_slab:
+        // case BlockId.dark_oak_slab:
+        // case BlockId.cut_sandstone_slab:
+        // case BlockId.diorite_slab:
+        // case BlockId.birch_slab:        
+        // case BlockId.granite_slab:
+        // case BlockId.mossy_stone_brick_slab:
+        // case BlockId.nether_brick_slab:
+        // case BlockId.oak_slab:
+        // case BlockId.end_stone_brick_slab:
+        // case BlockId.jungle_slab:
+        // case BlockId.mossy_cobblestone_slab:
+        // case BlockId.polished_blackstone_slab:
+        // case BlockId.polished_diorite_slab:
+        // case BlockId.red_sandstone_slab:
+        // case BlockId.polished_granite_slab:
+        // case BlockId.purpur_slab:
+        // case BlockId.polished_granite_slab:
+        // case BlockId.petrified_oak_slab:        
+        // case BlockId.smooth_red_sandstone_slab:
+        // case BlockId.spruce_slab:
+        // case BlockId.smooth_quartz_slab:        
+        // case BlockId.polished_andesite_slab:
+        // case BlockId.prismarine_brick_slab:
+        // case BlockId.quartz_slab:
+        // case BlockId.smooth_stone_slab:
+        // case BlockId.smooth_sandstone_slab:
+        // case BlockId.sandstone_slab:
+        // case BlockId.prismarine_slab:        
+        // case BlockId.polished_blackstone_brick_slab:
+        // case BlockId.red_nether_brick_slab:
+        // case BlockId.warped_slab:
+        // case BlockId.stone_brick_slab:
+        // case BlockId.stone_slab:
+        
 
         case BlockId.brick_stairs:
         case BlockId.dark_prismarine_stairs:
@@ -150,6 +154,8 @@ export function getVariantsInstance(id : BlockId, models : {[key:string] : Block
         case BlockId.stone_stairs:
         case BlockId.warped_stairs:
         case BlockId.spruce_stairs:
+            return new Stairs(id, models);
+            
 
         case BlockId.birch_button:
         case BlockId.dark_oak_button:
@@ -160,6 +166,7 @@ export function getVariantsInstance(id : BlockId, models : {[key:string] : Block
         case BlockId.polished_blackstone_button:        
         case BlockId.stone_button:
         case BlockId.warped_button:        
+        return new Button(id, models);
 
         case BlockId.birch_trapdoor:
         case BlockId.acacia_trapdoor:        
@@ -170,105 +177,129 @@ export function getVariantsInstance(id : BlockId, models : {[key:string] : Block
         case BlockId.spruce_trapdoor:
         case BlockId.warped_trapdoor:
         case BlockId.dark_oak_trapdoor:
+            return new Trapdoor(id, models);
 
 
-        case BlockId.acacia_wood:        
-        case BlockId.dark_oak_wood:
-        case BlockId.birch_wood:        
-        case BlockId.jungle_wood:
-        case BlockId.oak_wood:        
-        case BlockId.stripped_dark_oak_wood:        
-        case BlockId.stripped_jungle_wood:
-        case BlockId.stripped_oak_wood:
-        case BlockId.spruce_wood:
-        case BlockId.stripped_spruce_wood:
-        case BlockId.stripped_acacia_wood:
-        case BlockId.stripped_birch_wood:
+        // case BlockId.acacia_wood:        
+        // case BlockId.dark_oak_wood:
+        // case BlockId.birch_wood:        
+        // case BlockId.jungle_wood:
+        // case BlockId.oak_wood:        
+        // case BlockId.stripped_dark_oak_wood:        
+        // case BlockId.stripped_jungle_wood:
+        // case BlockId.stripped_oak_wood:
+        // case BlockId.spruce_wood:
+        // case BlockId.stripped_spruce_wood:
+        // case BlockId.stripped_acacia_wood:
+        // case BlockId.stripped_birch_wood:
 
-        case BlockId.dead_brain_coral_wall_fan:
-        case BlockId.brain_coral_wall_fan:        
-        case BlockId.dead_bubble_coral_wall_fan:
-        case BlockId.bubble_coral_wall_fan:
-        case BlockId.dead_fire_coral_wall_fan:
-        case BlockId.dead_horn_coral_wall_fan:
-        case BlockId.fire_coral_wall_fan:
-        case BlockId.horn_coral_wall_fan:
-        case BlockId.tube_coral_wall_fan:
-        case BlockId.dead_tube_coral_wall_fan:
+        // case BlockId.dead_brain_coral_wall_fan:
+        // case BlockId.brain_coral_wall_fan:        
+        // case BlockId.dead_bubble_coral_wall_fan:
+        // case BlockId.bubble_coral_wall_fan:
+        // case BlockId.dead_fire_coral_wall_fan:
+        // case BlockId.dead_horn_coral_wall_fan:
+        // case BlockId.fire_coral_wall_fan:
+        // case BlockId.horn_coral_wall_fan:
+        // case BlockId.tube_coral_wall_fan:
+        // case BlockId.dead_tube_coral_wall_fan:
+           
 
         case BlockId.redstone_wall_torch:
         case BlockId.soul_wall_torch:
         case BlockId.wall_torch:
+            return new Torch(id, models);
+        
       
-        case BlockId.redstone_torch:
-      
-        case BlockId.basalt:
-        case BlockId.bee_nest:
-        case BlockId.beehive:
-        case BlockId.beetroots:
-        case BlockId.bell:
+        // case BlockId.redstone_torch:
+  
+       
+        // case BlockId.basalt:
+        // case BlockId.bee_nest:
+        // case BlockId.beehive:
+        // case BlockId.beetroots:
+        // case BlockId.bell:
 
+        case BlockId.attached_pumpkin_stem:
+        case BlockId.attached_melon_stem:
+        case BlockId.jack_o_lantern:
+        case BlockId.melon_stem:
         case BlockId.carved_pumpkin:
-        case BlockId.cauldron:
-        case BlockId.chain:
-        case BlockId.chain_command_block:
-        case BlockId.chipped_anvil:
+            return new Pumpkin(id, models);
+        
+      
+        // case BlockId.cauldron:
+        // case BlockId.chain:
+        // case BlockId.chain_command_block:
 
 
 
-        case BlockId.daylight_detector:
+        // case BlockId.daylight_detector:
 
         case BlockId.activator_rail:
         case BlockId.detector_rail:
         case BlockId.powered_rail:
         case BlockId.rail:
+            return new Rail(id, models);
         
+      
 
-        case BlockId.grass_block:
-        case BlockId.tall_grass:
-        case BlockId.tall_seagrass:
+        // case BlockId.grass_block:
+        // case BlockId.tall_grass:
+        // case BlockId.tall_seagrass:
         
+        case BlockId.furnace:
         case BlockId.blast_furnace:
+            return new FurnaceBurning(id, models);
 
-        case BlockId.chorus_flower:
+        // case BlockId.chorus_flower:
 
-        case BlockId.crimson_hyphae:
+        // case BlockId.crimson_hyphae:
+
         case BlockId.damaged_anvil:
-        
-
-
+        case BlockId.chipped_anvil:
         case BlockId.anvil:
-        case BlockId.attached_melon_stem:
-        case BlockId.attached_pumpkin_stem:
+            return new Anvil(id, models);
+
 
 
         case BlockId.bone_block:
-        case BlockId.cake:
+            return new Bone(id, models);
+
+        // case BlockId.cake:
+
         case BlockId.cocoa:
-        case BlockId.command_block:
-        case BlockId.crimson_stem:
+            return new Cocoa(id, models);
 
-        case BlockId.barrel:
-        case BlockId.campfire:
-        case BlockId.carrots:
-        case BlockId.comparator:
+        // case BlockId.command_block:
+        // case BlockId.crimson_stem:
+
+        // case BlockId.barrel:
+        // case BlockId.campfire:
+        // case BlockId.carrots:
+        // case BlockId.comparator:
+
         case BlockId.dispenser:
-        case BlockId.frosted_ice:
-        case BlockId.furnace:
+            return new Dispenser(id, models);
+
+
+        // case BlockId.frosted_ice:
+        // case BlockId.furnace:
         
-        case BlockId.item_frame:
-        case BlockId.jack_o_lantern:
-        case BlockId.lantern:
-        case BlockId.large_fern:
-        case BlockId.lectern:
+        // case BlockId.item_frame:
+        // case BlockId.lantern:
+        // case BlockId.large_fern:
+        // case BlockId.lectern:
+
         case BlockId.lever:
-        case BlockId.lilac:
-        case BlockId.melon_stem:
+            return new Lever(id, models);
 
-        
+        // case BlockId.lilac:
 
-        case BlockId.dropper:
+        // case BlockId.dropper:
+
         case BlockId.end_portal_frame:
+            return new EndPortalFrame(id, models);
 
         case BlockId.grindstone:
         case BlockId.hay_block:

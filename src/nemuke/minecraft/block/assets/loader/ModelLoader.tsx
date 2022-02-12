@@ -1399,15 +1399,23 @@ export type JsonFace = {
         texture : string,
         cullface? : string,
         tintindex? : number,
-        uv? : number[]
+        uv? : number[],
+        rotation? : number
     } | undefined
+}
+
+export type JsonRotation = {
+    origin : number[],
+    axis : string,
+    angle : number
 }
 
 export type JsonElement  = {
     from : number[],
     to : number[],
     faces : JsonFace,
-    shade? : boolean
+    shade? : boolean,
+    rotation? : JsonRotation
 }
 
 export type JsonTexture = {

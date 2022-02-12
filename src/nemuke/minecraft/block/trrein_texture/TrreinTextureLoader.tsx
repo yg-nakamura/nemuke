@@ -108,11 +108,11 @@ export class MTextureLoader{
         
         let offset = 0;
         for(let name in images){
-            ctx.drawImage(images[name],offset,0);
+            ctx.drawImage(images[name], 0,0, images[name].width, images[name].width, offset,0, images[name].width , images[name].width);
             this.textures[name] = {
                 offset : offset,
                 width : images[name].width,
-                height : images[name].height
+                height : images[name].width
             }
             offset += images[name].width; 
         }

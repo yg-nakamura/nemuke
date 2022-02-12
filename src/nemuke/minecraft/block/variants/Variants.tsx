@@ -1,5 +1,8 @@
 import BlockId, { getBlockNameById } from "../BlockId";
 import { BlockModel } from "../block_model/BlockModel";
+import { FaceType } from "../block_model/MFace";
+import AdjBlocks from "../units/AdjBlocks";
+import { Vec3 } from "../units/Vec3";
 
 export type BlockModelProp = {
     model : BlockModel
@@ -8,8 +11,10 @@ export type BlockModelProp = {
 
 export class Variants{
 
-    id : BlockId;
-    models  : {[key:string] : BlockModelProp};
+    private id : BlockId;
+    private models  : {[key:string] : BlockModelProp};
+    
+
 
     constructor(id : BlockId, models : {[key:string] : BlockModelProp} ){
         this.id = id;
@@ -20,24 +25,32 @@ export class Variants{
         return this.id;
     }
 
-    public getModel(data : number) : BlockModel{
-        // console.log(this.getKeys());
-        // console.log(data);
-        // console.log(this.getKeys()[data]);
-        return this.models[this.getKeys()[data]].model;
-        // if(this.models[""]){
-        //     return this.models[""].model;
-        // }else{
-        //     let k = "";
-        //     for(k in this.models){
-        //         break;
-        //     }
-        //     return this.models[k].model
-        // }
-       
+    public getFirstModel() : BlockModel{
+        return this.models[this.getKeys()[0]].model;
     }
 
 
+    public getModelByKeys(keys : string[]) : BlockModel{
+        let f = false;
+        for(let k1 in this.models){
+            f = true;
+            for(let k2 of keys){
+                if(k1.search(k2) < 0) {
+                    f = false;
+                    break
+                }
+            }
+            if(f){
+                return this.models[k1].model;
+            }
+        }
+        return this.getFirstModel();
+    }
+
+    public pushGeometries(geometries : THREE.BufferGeometry[],pos : Vec3,data : number, adjBlocks : AdjBlocks,keys : string[]){
+
+        this.getModelByKeys(keys).pushGeometries(geometries,pos,adjBlocks);
+    }
 
     public getKeys() : string[]{
         return Object.keys(this.models);

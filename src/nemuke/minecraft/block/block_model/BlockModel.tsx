@@ -4,7 +4,7 @@ import Block from '../Block';
 import BlockId from '../BlockId';
 import { MElement } from './MElement';
 import { FaceType } from './MFace';
-import BlockModelLoader, { JsonElement, JsonModel } from '../assets/loader/ModelLoader';
+import BlockModelLoader, { JsonElement, JsonModel, JsonRotation } from '../assets/loader/ModelLoader';
 import { Vec3 } from '../units/Vec3';
 
 type faceFlag = {
@@ -66,13 +66,19 @@ export class BlockModel {
             for(let jsonElement of jsonModel.elements){
                 const from = jsonElement.from;
                 const to = jsonElement.to;
+                const rotation = jsonElement.rotation;
                 const element = this.createElement({x: from[0], y: from[1] , z: from[2]}, {x: to[0], y: to[1] , z: to[2]});
+                element.rotation = rotation;
                 for(let face_key in jsonElement.faces){
+                    let rotate = 0;
                     switch(face_key){
                         case "down":
                             if(jsonElement.faces["down"] && this.textures[jsonElement.faces["down"].texture]){
+                                if(jsonElement.faces["down"].rotation){
+                                    rotate = jsonElement.faces["down"].rotation / 90;
+                                }
                                 element.createFace(FaceType.down,
-                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["down"].texture],
+                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["down"].texture],rotate,
                                     jsonElement.faces["down"].uv)}
                                     );
                                 if(jsonElement.faces["down"].cullface){
@@ -83,8 +89,11 @@ export class BlockModel {
                             break;
                         case "up":
                             if(jsonElement.faces["up"] && this.textures[jsonElement.faces["up"].texture]){
+                                if(jsonElement.faces["up"].rotation){
+                                    rotate = jsonElement.faces["up"].rotation / 90;
+                                }
                                 element.createFace(FaceType.up, 
-                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["up"].texture],
+                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["up"].texture],rotate,
                                     jsonElement.faces["up"].uv)}
                                     );
                                 if(jsonElement.faces["up"].cullface){
@@ -95,8 +104,11 @@ export class BlockModel {
                             break;
                         case "north":
                             if(jsonElement.faces["north"] && this.textures[jsonElement.faces["north"].texture]){
+                                if(jsonElement.faces["north"].rotation){
+                                    rotate = jsonElement.faces["north"].rotation / 90;
+                                }
                                 element.createFace(FaceType.north, 
-                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["north"].texture],
+                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["north"].texture],rotate,
                                     jsonElement.faces["north"].uv)}
                                     );
                                 if(jsonElement.faces["north"].cullface){
@@ -107,8 +119,11 @@ export class BlockModel {
                             break;
                         case "south":
                             if(jsonElement.faces["south"] && this.textures[jsonElement.faces["south"].texture]){
+                                if(jsonElement.faces["south"].rotation){
+                                    rotate = jsonElement.faces["south"].rotation / 90;
+                                }
                                 element.createFace(FaceType.south, 
-                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["south"].texture],
+                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["south"].texture],rotate,
                                     jsonElement.faces["south"].uv)}
                                     );
                                 if(jsonElement.faces["south"].cullface){
@@ -119,8 +134,11 @@ export class BlockModel {
                             break;
                         case "west":
                             if(jsonElement.faces["west"] && this.textures[jsonElement.faces["west"].texture]){
+                                if(jsonElement.faces["west"].rotation){
+                                    rotate = jsonElement.faces["west"].rotation / 90;
+                                }
                                 element.createFace(FaceType.west, 
-                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["west"].texture],
+                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["west"].texture],rotate,
                                     jsonElement.faces["west"].uv)}
                                     );
                                 if(jsonElement.faces["west"].cullface){
@@ -131,8 +149,11 @@ export class BlockModel {
                             break;
                         case "east":
                             if(jsonElement.faces["east"] && this.textures[jsonElement.faces["east"].texture]){
+                                if(jsonElement.faces["east"].rotation){
+                                    rotate = jsonElement.faces["east"].rotation / 90;
+                                }
                                 element.createFace(FaceType.east, 
-                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["east"].texture],
+                                    {uv:Block.getUVMap(this.textures[jsonElement.faces["east"].texture],rotate,
                                     jsonElement.faces["east"].uv)}
                                     );
                                 if(jsonElement.faces["east"].cullface){
@@ -187,7 +208,17 @@ export class BlockModel {
         this.elements.push(element);
     }
 
-    public pushGeometries(geometries : THREE.BufferGeometry[],pos: Vec3,adjBlocks : {east? : BlockId, west? : BlockId, up? : BlockId, down? : BlockId, south? : BlockId, north? : BlockId}){
+    public pushGeometries(geometries : THREE.BufferGeometry[],pos: Vec3, 
+        adjBlocks : {
+            east : {id : BlockId, damage : number},
+            west : {id : BlockId, damage : number},
+            up : {id : BlockId, damage : number},
+            down : {id : BlockId, damage : number},
+            south : {id : BlockId, damage : number},
+            north : {id : BlockId, damage : number},
+        }
+        ){
+
         let flag : faceFlag = {
             down : false,
             up : false,
@@ -201,22 +232,22 @@ export class BlockModel {
             (this.isFullFace.down && this.isFullFace.up && this.isFullFace.north && 
              this.isFullFace.south && this.isFullFace.west && this.isFullFace.east)
             ){
-                if(Block.getBlockModelByID(adjBlocks.east).isFullFace.west){
+                if(Block.getBlockModelByID(adjBlocks.east.id,adjBlocks.east.damage).isFullFace.west){
                     flag.east = true;
                 }
-                if(Block.getBlockModelByID(adjBlocks.west).isFullFace.east){
+                if(Block.getBlockModelByID(adjBlocks.west.id,adjBlocks.west.damage).isFullFace.east){
                     flag.west = true;
                 }
-                if(Block.getBlockModelByID(adjBlocks.up).isFullFace.down){
+                if(Block.getBlockModelByID(adjBlocks.up.id,adjBlocks.up.damage).isFullFace.down){
                     flag.up = true;
                 }
-                if(Block.getBlockModelByID(adjBlocks.down).isFullFace.up){
+                if(Block.getBlockModelByID(adjBlocks.down.id,adjBlocks.down.damage).isFullFace.up){
                     flag.down = true;
                 }
-                if(Block.getBlockModelByID(adjBlocks.south).isFullFace.north){
+                if(Block.getBlockModelByID(adjBlocks.south.id,adjBlocks.south.damage).isFullFace.north){
                     flag.south = true;
                 }
-                if(Block.getBlockModelByID(adjBlocks.north).isFullFace.south){
+                if(Block.getBlockModelByID(adjBlocks.north.id,adjBlocks.north.damage).isFullFace.south){
                     flag.north = true;
                 }
         }
@@ -232,14 +263,14 @@ export class BlockModel {
                 pos.y + 0.5 + (element.from.y / 16) - (16 - element.to.y + element.from.y) / 32,
                 pos.z + 0.5 + (element.from.z / 16) - (16 - element.to.z + element.from.z) / 32
             ];
-            for(let g of elementGeometries){
-                geometries.push(g.clone().translate(offsetPos[0],offsetPos[1],offsetPos[2]));
+            if(elementGeometries != null){
+                geometries.push(elementGeometries.clone().translate(offsetPos[0],offsetPos[1],offsetPos[2]));
             }
         }
     }
 
     public getUV(path : string) : number[]{
-        return Block.getUVMap(path);
+        return Block.getUVMap(path, 0);
     }
 
     public rotateY() : BlockModel{
@@ -248,23 +279,42 @@ export class BlockModel {
             const from = {x : element.from.z , z : 16 - element.to.x , y : element.from.y};
             const to = {x : element.to.z, z : 16 - element.from.x, y : element.to.y};
             const newelement = model.createElement(from, to);
+            if(element.rotation){
+                const origin = element.rotation.origin;
+                const newrotation : JsonRotation = {
+                    origin : [16-origin[2], origin[1], origin[0]],
+                    axis : 　element.rotation.axis == "y" ?  "y" : (element.rotation.axis == "z" ? "x" : "z"),
+                    angle : element.rotation.axis == "y" ? element.rotation.angle : (element.rotation.axis == "z" ?  - element.rotation.angle : element.rotation.angle)
+                }
+                newelement.rotation = newrotation;
+            }
             if(element.faces[FaceType.east]){
-                newelement.createFace(FaceType.north,element.faces[FaceType.east].faceInfo);
+                newelement.createFace(FaceType.south,element.faces[FaceType.east].faceInfo);
             }
             if(element.faces[FaceType.north]){
-                newelement.createFace(FaceType.west,element.faces[FaceType.north].faceInfo);
+                newelement.createFace(FaceType.east,element.faces[FaceType.north].faceInfo);
             }
             if(element.faces[FaceType.west]){
-                newelement.createFace(FaceType.south,element.faces[FaceType.west].faceInfo);
+                newelement.createFace(FaceType.north,element.faces[FaceType.west].faceInfo);
             }
             if(element.faces[FaceType.south]){
-                newelement.createFace(FaceType.east,element.faces[FaceType.south].faceInfo);
+                newelement.createFace(FaceType.west,element.faces[FaceType.south].faceInfo);
             }
             if(element.faces[FaceType.up]){
-                newelement.createFace(FaceType.up,element.faces[FaceType.up].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.up].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.up,{uv:uv});
             }
             if(element.faces[FaceType.down]){
-                newelement.createFace(FaceType.down,element.faces[FaceType.down].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.down].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.down,{uv:uv});
             }
             model.pushElement(newelement);
         }
@@ -274,26 +324,65 @@ export class BlockModel {
     public rotateX() : BlockModel{
         const model = new BlockModel();
         for (let element of this.elements) {
-            const from = {x : element.from.z , z : 16 - element.to.x , y : element.from.y};
-            const to = {x : element.to.z, z : 16 - element.from.x, y : element.to.y};
+            const from = {x : element.from.x , z : element.from.y , y : 16 - element.to.z};
+            const to = {x : element.to.x, z : element.to.y, y : 16 - element.from.z};
             const newelement = model.createElement(from, to);
+            if(element.rotation){
+                const origin = element.rotation.origin;
+                const newrotation : JsonRotation = {
+                    origin : [origin[0], origin[2], 16 - origin[1]],
+                    axis : 　element.rotation.axis == "x" ?  "x" : (element.rotation.axis == "z" ? "y" : "z"),
+                    angle : element.rotation.axis == "x" ? element.rotation.angle : (element.rotation.axis == "y" ?  - element.rotation.angle : element.rotation.angle)
+                }
+                newelement.rotation = newrotation;
+            }
             if(element.faces[FaceType.east]){
-                newelement.createFace(FaceType.down,element.faces[FaceType.east].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.east].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.east,{uv:uv});
             }
             if(element.faces[FaceType.north]){
-                newelement.createFace(FaceType.north,element.faces[FaceType.north].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.north].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.down,{uv:uv});
             }
             if(element.faces[FaceType.west]){
-                newelement.createFace(FaceType.up,element.faces[FaceType.west].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.west].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.west,{uv:uv});
             }
             if(element.faces[FaceType.south]){
-                newelement.createFace(FaceType.south,element.faces[FaceType.south].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.south].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.up,{uv:uv});
             }
             if(element.faces[FaceType.up]){
-                newelement.createFace(FaceType.east,element.faces[FaceType.up].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.up].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.north,{uv:uv});
             }
             if(element.faces[FaceType.down]){
-                newelement.createFace(FaceType.west,element.faces[FaceType.down].faceInfo);
+                let uv = [0,0, 0,0, 0,0, 0,0];
+                const uvR = [4,5,0,1,6,7,2,3];
+                for(let i = 0; i < 8; i++){
+                    uv[i] = element.faces[FaceType.down].faceInfo.uv[uvR[i]];
+                }
+                newelement.createFace(FaceType.south,{uv:uv});
             }
             model.pushElement(newelement);
         }
